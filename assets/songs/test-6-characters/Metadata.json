@@ -1,0 +1,32 @@
+{
+  "song": "test-6-characters",
+  "bpm": 120,
+  "needsVoices": true,
+  "player1": "bf",
+  "player2": "dad",
+  "player3": "bf",
+  "player4": "bf",
+  "player5": "dad",
+  "player6": "dad",
+  "gfVersion": "gf",
+  "stage": "neuroses",
+  "speed": 1.0,
+  "notes": [
+    {
+      "sectionNotes": [],
+      "lengthInSteps": 16,
+      "typeOfSection": 0,
+      "mustHitSection": true,
+      "altAnim": false,
+      "gfSection": false
+    },
+    {
+      "sectionNotes": [],
+      "lengthInSteps": 16,
+      "typeOfSection": 0,
+      "mustHitSection": false,
+      "altAnim": false,
+      "gfSection": false
+    }
+  ]
+}

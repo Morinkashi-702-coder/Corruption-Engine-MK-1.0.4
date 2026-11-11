@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="pause chains.png">
+	<!-- Created with Adobe Animate version 22.0.1.105 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="chains0000" x="8" y="8" width="893" height="630" frameX="-61" frameY="-297" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0001" x="909" y="8" width="1118" height="703" frameX="0" frameY="-404" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0002" x="2035" y="8" width="1192" height="1068" frameX="-91" frameY="-511" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0003" x="3235" y="8" width="1338" height="881" frameX="-254" frameY="-601" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0004" x="4581" y="8" width="1499" height="874" frameX="-415" frameY="-511" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0005" x="8" y="1084" width="2159" height="1468" frameX="-575" frameY="0" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0006" x="2175" y="1084" width="1848" height="1149" frameX="-736" frameY="-290" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0007" x="4031" y="1084" width="1654" height="1000" frameX="-783" frameY="-533" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0008" x="5693" y="1084" width="1661" height="969" frameX="-783" frameY="-533" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0009" x="8" y="2560" width="1669" height="936" frameX="-783" frameY="-533" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0010" x="1685" y="2560" width="1673" height="901" frameX="-783" frameY="-533" frameWidth="2734" frameHeight="1579"/>
+	<SubTexture name="chains0011" x="3366" y="2560" width="1673" height="901" frameX="-783" frameY="-533" frameWidth="2734" frameHeight="1579"/>
+</TextureAtlas>

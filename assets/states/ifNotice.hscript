@@ -1,0 +1,160 @@
+import StringTools;
+import flixel.math.FlxMath;
+import openfl.filters.ShaderFilter;
+import openfl.Lib;
+
+// TRIVIA: This was originally all done through images, i wanted to make editable with code, so here we are!!!
+
+importClass("Discord");
+importClass("FadeTransitionSubstate");
+importClass("MusicBeatState");
+importClass("LoadingState");
+importClass("options.OptionsState");
+importClass("options.OptionsSubstate");
+importClass("tgt.MainMenuState");
+importClass("CreditsState");
+
+// notice shit
+var moveTween:FlxTween;
+var textTween:FlxTween;
+var curInfo:Int = 0;
+var infoCard:FlxSpriteGroup;
+var canSelect:Bool = false;
+
+function onStateCreate(){
+    persistentUpdate = true;
+	persistentDraw = true;
+
+    MusicBeatState.stopMenuMusic();
+
+    FadeTransitionSubstate.nextCamera = FlxG.camera; // AAAA
+    
+    Paths.pushGlobalContent();
+    Paths.loadTheFirstEnabledMod();
+    FlxG.mouse.visible = false;
+    FlxG.camera.bgColor = FlxColor.BLACK;
+
+    camFollow = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
+    camFollow.alpha = 0;
+    camFollow.setPosition(951,570);
+    //FlxTween.tween(camFollowPos,  {x: camFollowPos.x + 1000}, 1.0, {ease: FlxEase.sineInOut, type: FlxTween.PINGPONG});
+    camFollowPos = new FlxObject(951,-270, 1, 1);
+    add(camFollow);
+    add(camFollowPos);
+
+    FlxG.camera.zoom = 0.593;
+    FlxG.camera.follow(camFollowPos, null, 1);
+
+    nextCard();
+}
+
+function onUpdate(elapsed:Float){
+    inputShit();
+}
+
+function inputShit(){
+    if (!canSelect){return;}
+
+    if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER|| FlxG.keys.justPressed.Z){
+        canSelect = false;
+        FlxG.sound.play(Paths.sound('confirmMenu'));
+        
+        if (curInfo == 2){
+            removeCardAndLeave();
+        } else {
+            removeInfoCard();
+        }
+    }
+}
+
+function createInfoCard(infoText:String, subInfoText:String){
+    trace("createInfoCard");
+     // main 0,0
+    // left -1610,0
+    // right 1710,0
+    if (infoCard != null){
+        remove(infoCard);
+    }
+
+    infoCard = new FlxSpriteGroup();
+    add(infoCard);
+    
+    if (moveTween != null){
+        moveTween.cancel();
+    }
+
+    if (textTween != null){
+        textTween.cancel();
+    }
+
+    var infoSprite = new FlxSprite(290,-630, Paths.image('infoCard'));
+    infoSprite.scrollFactor.set(0,0);
+    infoSprite.scale.set(1,1);
+    infoSprite.alpha = 0.8;
+    infoCard.add(infoSprite);
+
+    var mainText = new FlxText(441,-460, 1000, infoText, 16);
+    mainText.setFormat(Paths.font("VollkornRegular-ZVJEZ.ttf"), 48, 0xFFFFFFFF, FlxTextAlign.CENTER);
+    infoCard.add(mainText);
+
+    var subText = new FlxText(441,-140, 1000, subInfoText, 16);
+    subText.setFormat(Paths.font("VollkornRegular-ZVJEZ.ttf"), 52, 0xCC5363, FlxTextAlign.CENTER);
+    infoCard.add(subText);
+    subText.alpha = 0;
+
+    infoCard.x = -1610;
+    infoCard.alpha = 0;
+    
+    moveTween = FlxTween.tween(infoCard,  {x: 0,alpha: 1}, 0.2, {ease: FlxEase.sineOut});
+    textTween = FlxTween.tween(subText,  {alpha: 1}, 1, {ease: FlxEase.sineOut});
+}
+
+function removeInfoCard(){
+    if (moveTween != null){
+        moveTween.cancel();
+    }
+
+    if (textTween != null){
+        textTween.cancel();
+    }
+
+    moveTween = FlxTween.tween(infoCard, {x: 1710,alpha: 0}, 0.2, {ease: FlxEase.sineOut, onComplete: nextCard});
+}
+
+function nextCard(){
+    
+    new FlxTimer().start(1, function(tmr){
+        canSelect = true;
+        tmr.destroy();
+    });
+    trace("nextCard");
+
+    switch (curInfo){
+        case 0:
+            createInfoCard('Corruption:IF\nacts as non-canonical\n"What if?"\nscenarios for moments in the mod.', "I understand. →");
+            trace("curinfo = 0");
+        case 1:
+            createInfoCard("\nCorruption:IF\nis directed by:\nPincerProd", "I understand. →");
+    }   
+
+    curInfo++;
+    trace("cur info: "+curInfo);
+}
+
+function removeCardAndLeave(){
+    if (moveTween != null){
+        moveTween.cancel();
+    }
+
+    if (textTween != null){
+        textTween.cancel();
+    }
+
+    moveTween = FlxTween.tween(infoCard, {x: 1710,alpha: 0}, 0.2, {ease: FlxEase.sineOut, onComplete: leaveScene});
+}
+
+function leaveScene(){
+    var state = new HScriptState("ifMenu");
+        MusicBeatState.switchState(state);
+}
+

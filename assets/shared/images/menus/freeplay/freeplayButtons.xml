@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="freeplayButtons.png" width="629" height="641">
+	<SubTexture name="b0" x="2" y="355" width="398" height="72" frameX="-124" frameY="-23" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="b1" x="547" y="323" width="52" height="228" rotated="true" frameX="-126" frameY="-131" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="b2" x="493" y="281" width="52" height="323" rotated="true" frameX="-124" frameY="-234" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="b3" x="2" y="499" width="390" height="71" frameX="-123" frameY="-322" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="s0" x="2" y="2" width="575" height="100" frameX="-30" frameY="-9" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="s1" x="2" y="281" width="489" height="72" frameX="-29" frameY="-120" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="s2" x="2" y="206" width="545" height="73" frameX="-29" frameY="-226" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="s3" x="2" y="104" width="575" height="100" frameX="-32" frameY="-310" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="t0" x="2" y="429" width="394" height="68" frameX="-126" frameY="-25" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="t1" x="402" y="355" width="48" height="224" rotated="true" frameX="-128" frameY="-133" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="t2" x="579" y="2" width="48" height="319" rotated="true" frameX="-126" frameY="-236" frameWidth="631" frameHeight="430"/>
+	<SubTexture name="t3" x="2" y="572" width="387" height="67" frameX="-124" frameY="-324" frameWidth="631" frameHeight="430"/>
+</TextureAtlas>

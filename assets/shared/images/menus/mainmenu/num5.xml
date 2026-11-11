@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="num5.png">
+	<!-- Created with Adobe Animate version 22.0.1.105 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="0fith0000" x="8" y="8" width="36" height="66"/>
+	<SubTexture name="1fith0000" x="52" y="8" width="6" height="55" frameX="-26" frameY="-8" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="2fith0000" x="66" y="8" width="36" height="66"/>
+	<SubTexture name="3fith0000" x="110" y="8" width="31" height="66" frameX="-3" frameY="0" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="4fith0000" x="149" y="8" width="35" height="55" frameX="1" frameY="-3" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="5fith0000" x="192" y="8" width="34" height="66"/>
+	<SubTexture name="6fith0000" x="8" y="82" width="36" height="66"/>
+	<SubTexture name="7fith0000" x="52" y="82" width="27" height="57" frameX="-6" frameY="-3" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="8fith0000" x="87" y="82" width="36" height="66"/>
+	<SubTexture name="9fith0000" x="131" y="82" width="35" height="57"/>
+</TextureAtlas>

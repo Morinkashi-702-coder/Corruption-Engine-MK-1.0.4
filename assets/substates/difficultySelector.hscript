@@ -1,0 +1,213 @@
+callback = function(a, b, c, d, e, f, g, h, i, j){
+    trace("selected (callback ejecutada)");
+    trace("selectedDiff: " + a + " selectedModDiff: " + b);
+}
+
+trace("[hscript] Script difficultySelector.hscript iniciado");
+
+selectedDiff = 1;
+selectedModDiff = 2;
+
+var whichSelected = 0;
+var canConfirm = true;
+
+var black;
+var SHART;
+var confirm;
+
+var modshart;
+
+var SHARTdiff;
+var modshartdiff;
+
+var selectorLeft;
+var selectorRight;
+
+var diffCamera;
+
+var canonWarn;
+
+function create(){
+    diffCamera = new FlxCamera();
+    diffCamera.bgColor = 0;
+    FlxG.cameras.add(diffCamera, false);
+    this.cameras = [diffCamera];
+
+    if(settingStory)
+        whichSelected = 1;
+
+    black = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+    black.scale.set(1280, 720);
+    black.updateHitbox();
+    black.screenCenter();
+    black.alpha = 0.5;
+    black.cameras = [diffCamera];
+    add(black);
+
+    canonWarn = new FlxText(0,0, 1200, "Canon disables ghost-tapping and has higher health loss!", 8);
+    canonWarn.setFormat(Paths.font("VollkornRegular-ZVJEZ.ttf", "if"), 24, 0xFFFF0000, FlxTextAlign.CENTER);
+    canonWarn.screenCenter();
+    canonWarn.visible = false;
+    canonWarn.y -= 100;
+    if(settingStory)
+        add(canonWarn);
+
+    SHART = new FlxSprite(0, 0).loadGraphic(Paths.image("menus/difficulty/difficulty", "if"));
+    SHART.screenCenter();
+    SHART.x -= SHART.width / 2;
+
+    modshart = new FlxSprite(0, 0).loadGraphic(Paths.image("menus/difficulty/modchart", "if"));
+    modshart.screenCenter();
+    modshart.x -= modshart.width / 2;
+
+    selectorLeft = new FlxSprite(0, 0).loadGraphic(Paths.image("menus/difficulty/selector", "if"));
+    selectorLeft.screenCenter();
+    selectorLeft.x -= 320;
+    add(selectorLeft);
+
+    selectorRight = new FlxSprite(0, 0).loadGraphic(Paths.image("menus/difficulty/selector", "if"));
+    selectorRight.flipX = true;
+    selectorRight.screenCenter();
+    selectorRight.x += 280;
+    add(selectorRight);
+
+    SHARTdiff = new FlxSprite().loadGraphic(Paths.image("menus/difficulty/diffs", "if"), true, 146, 24);
+    SHARTdiff.animation.add("easy", [0], 0);
+    SHARTdiff.animation.add("normal", [1], 0);
+    SHARTdiff.animation.add("hard", [2], 0);
+    SHARTdiff.animation.play("normal", true);
+    SHARTdiff.screenCenter();
+    SHARTdiff.x += SHART.width / 2;
+
+    modshartdiff = new FlxSprite().loadGraphic(Paths.image("menus/difficulty/moddiffs", "if"), true, 117, 25);
+    modshartdiff.animation.add("easy", [0], 0);
+    modshartdiff.animation.add("normal", [1], 0);
+    modshartdiff.animation.add("hard", [2], 0);
+    modshartdiff.animation.play("normal", true);
+    modshartdiff.screenCenter();
+    modshartdiff.x += SHART.width / 2;
+    add(modshartdiff);
+
+    confirm = new FlxSprite(0, 0).loadGraphic(Paths.image("menus/difficulty/confirm", "if"));
+    confirm.screenCenter();
+    confirm.y += 200;
+    add(confirm);
+
+    selectorLeft.y = modshart.y;
+    if(settingStory){
+        modshart.y += 50;
+        modshartdiff.y += 50;
+        SHART.y -= 50;
+        selectorLeft.y = SHART.y;
+        SHARTdiff.y -= 50;
+        add(SHART);
+        add(SHARTdiff);
+    }
+
+    add(modshart);
+
+    diffCamera.alpha = 0;
+
+    FlxTween.tween(diffCamera, {alpha: 1}, 1, {ease:FlxEase.quadOut});
+}
+
+var anims = ["easy", "normal", "hard"];
+
+
+function update(elapsed){
+    trace("[hscript] update ejecutándose");
+
+    if(!settingStory){
+        if(FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN || FlxG.keys.justPressed.W || FlxG.keys.justPressed.S){
+            whichSelected = (whichSelected == 1 ? 2 : 1);
+            FlxG.sound.play(Paths.sound('scrollMenu', "if"));
+        }
+    }else{
+        if(FlxG.keys.justPressed.UP || FlxG.keys.justPressed.W){
+            FlxG.sound.play(Paths.sound('scrollMenu', "if"));
+            whichSelected--;
+        }
+        else if(FlxG.keys.justPressed.DOWN || FlxG.keys.justPressed.S){
+            FlxG.sound.play(Paths.sound('scrollMenu', "if"));
+            whichSelected++;
+        }
+        if(whichSelected < 0)
+            whichSelected = 2;
+        else if(whichSelected > 2)
+            whichSelected = 0;
+    }
+
+    if(FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A){
+        if(whichSelected == 0)
+            selectedDiff--;
+        else if(whichSelected == 1)
+            selectedModDiff--;
+        FlxG.sound.play(Paths.sound('scrollMenu', "if"));
+    }else if(FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D){
+        if(whichSelected == 0)
+            selectedDiff++;
+        else if(whichSelected == 1)
+            selectedModDiff++;
+        FlxG.sound.play(Paths.sound('scrollMenu', "if"));
+    }
+
+    if(selectedDiff < 0)
+        selectedDiff = 2;
+    else if(selectedDiff > 2)
+        selectedDiff = 0;
+
+    if(selectedModDiff < 0)
+        selectedModDiff = 2;
+    else if(selectedModDiff > 2)
+        selectedModDiff = 0;
+
+    if(whichSelected == 0){
+        if (modshart != null) modshart.alpha = FlxMath.lerp(modshart.alpha, 0.5, elapsed * 60 * 0.3);
+        if (SHART != null) SHART.alpha = FlxMath.lerp(SHART.alpha, 1, elapsed * 60 * 0.3);
+        if (confirm != null) confirm.alpha = FlxMath.lerp(confirm.alpha, 0.5, elapsed * 60 * 0.3);
+        if (selectorLeft != null) selectorLeft.x = FlxMath.lerp(selectorLeft.x, 305, elapsed * 60 * 0.3);
+        if (selectorRight != null) selectorRight.x = FlxMath.lerp(selectorRight.x, 905, elapsed * 60 * 0.3);
+        if (selectorLeft != null && SHART != null) selectorLeft.y = FlxMath.lerp(selectorLeft.y, SHART.y, elapsed * 60 * 0.3);
+    }else if(whichSelected == 1){
+        if (modshart != null) modshart.alpha = FlxMath.lerp(modshart.alpha, 1, elapsed * 60 * 0.3);
+        if (SHART != null) SHART.alpha = FlxMath.lerp(SHART.alpha, 0.5, elapsed * 60 * 0.3);
+        if (confirm != null) confirm.alpha = FlxMath.lerp(confirm.alpha, 0.5, elapsed * 60 * 0.3);
+        if (selectorLeft != null) selectorLeft.x = FlxMath.lerp(selectorLeft.x, 305, elapsed * 60 * 0.3);
+        if (selectorRight != null) selectorRight.x = FlxMath.lerp(selectorRight.x, 905, elapsed * 60 * 0.3);
+        if (selectorLeft != null && modshart != null) selectorLeft.y = FlxMath.lerp(selectorLeft.y, modshart.y, elapsed * 60 * 0.3);
+    }else if(whichSelected == 2){
+        if (modshart != null) modshart.alpha = FlxMath.lerp(modshart.alpha, 0.5, elapsed * 60 * 0.3);
+        if (SHART != null) SHART.alpha = FlxMath.lerp(SHART.alpha, 0.5, elapsed * 60 * 0.3);
+        if (confirm != null) confirm.alpha = FlxMath.lerp(confirm.alpha, 1, elapsed * 60 * 0.3);
+        if (selectorLeft != null) selectorLeft.x = FlxMath.lerp(selectorLeft.x, 405, elapsed * 60 * 0.3);
+        if (selectorRight != null) selectorRight.x = FlxMath.lerp(selectorRight.x, 845, elapsed * 60 * 0.3);
+        if (selectorLeft != null && confirm != null) selectorLeft.y = FlxMath.lerp(selectorLeft.y, confirm.y, elapsed * 60 * 0.3);
+    }
+
+    if (canonWarn != null) canonWarn.visible = selectedDiff == 2;
+    if (selectorRight != null && selectorLeft != null) selectorRight.y = selectorLeft.y;
+    if (SHARTdiff != null && SHART != null) SHARTdiff.alpha = SHART.alpha;
+    if (modshartdiff != null && modshart != null) modshartdiff.alpha = modshart.alpha;
+
+    if (SHARTdiff != null) SHARTdiff.animation.play(anims[selectedDiff], true);
+    if (modshartdiff != null) modshartdiff.animation.play(anims[selectedModDiff], true);
+
+    if(canConfirm && (FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.SPACE)){
+        canConfirm = false;
+        trace("[hscript] Se presionó ENTER/SPACE, llamando a callback...");
+        FlxG.sound.play(Paths.sound('confirmMenu', "if"));
+        callback(selectedDiff, selectedModDiff, 0, 0, 0, 0, 0, 0, 0, 0);
+        this.close();
+        trace("[hscript] this.close() ejecutado");
+    }
+
+    if(FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE){
+        this.close();
+        trace("[hscript] Subestado cancelado con ESCAPE/BACKSPACE");
+    }
+}
+
+function onDestroy(){
+    FlxTween.cancelTweensOf(diffCamera);
+    FlxG.cameras.remove(diffCamera, true);
+}

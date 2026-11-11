@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="num3.png">
+	<!-- Created with Adobe Animate version 22.0.1.105 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="0third0000" x="8" y="8" width="90" height="203"/>
+	<SubTexture name="1third0000" x="106" y="8" width="23" height="172" frameX="-66" frameY="-14" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="2third0000" x="137" y="8" width="90" height="203"/>
+	<SubTexture name="3third0000" x="235" y="8" width="84" height="203" frameX="-5" frameY="0" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="4third0000" x="327" y="8" width="80" height="172" frameX="-12" frameY="-13" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="5third0000" x="415" y="8" width="78" height="203" frameX="-5" frameY="0" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="6third0000" x="8" y="219" width="84" height="203"/>
+	<SubTexture name="7third0000" x="100" y="219" width="62" height="184" frameX="-29" frameY="-3" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="8third0000" x="170" y="219" width="90" height="203"/>
+	<SubTexture name="9third0000" x="268" y="219" width="80" height="184" frameX="-12" frameY="0" frameWidth="1580" frameHeight="1264"/>
+</TextureAtlas>

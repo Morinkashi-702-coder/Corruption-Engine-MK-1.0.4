@@ -1,0 +1,266 @@
+{
+  "song0": [
+    {"desired": 1, "target": 4},
+    {"desired": 3, "target": 6},
+    {"desired": 5, "target": 8},
+    {"desired": 9, "target": 3},
+    {"desired": 0, "target": 4},
+    {"desired": 4, "target": 9}
+  ],
+  "song1": [
+    {"desired": 1, "target": 4},
+    {"desired": 7, "target": 4},
+    {"desired": 2, "target": 5},
+    {"desired": 5, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 4, "target": 9}
+  ],
+  "song2": [
+    {"desired": 2, "target": 5},
+    {"desired": 1, "target": 4},
+    {"desired": 5, "target": 8},
+    {"desired": 4, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 4, "target": 9}
+  ],
+  "song3": [
+    {"desired": 1, "target": 4},
+    {"desired": 1, "target": 5},
+    {"desired": 2, "target": 6},
+    {"desired": 8, "target": 2},
+    {"desired": 0, "target": 4},
+    {"desired": 5, "target": 0}
+  ],
+  "song4": [
+    {"desired": 1, "target": 4},
+    {"desired": 5, "target": 2},
+    {"desired": 5, "target": 8},
+    {"desired": 6, "target": 0},
+    {"desired": 0, "target": 4},
+    {"desired": 5, "target": 0}
+  ],
+  "song5": [
+    {"desired": 2, "target": 5},
+    {"desired": 1, "target": 4},
+    {"desired": 2, "target": 5},
+    {"desired": 9, "target": 3},
+    {"desired": 0, "target": 4},
+    {"desired": 5, "target": 0}
+  ],
+  "song6": [
+    {"desired": 1, "target": 4},
+    {"desired": 3, "target": 6},
+    {"desired": 1, "target": 4},
+    {"desired": 7, "target": 1},
+    {"desired": 0, "target": 4},
+    {"desired": 6, "target": 0}
+  ],
+  "song7": [
+    {"desired": 1, "target": 4},
+    {"desired": 5, "target": 2},
+    {"desired": 3, "target": 6},
+    {"desired": 3, "target": 7},
+    {"desired": 0, "target": 4},
+    {"desired": 6, "target": 0}
+  ],
+  "song8": [
+    {"desired": 1, "target": 4},
+    {"desired": 6, "target": 3},
+    {"desired": 4, "target": 7},
+    {"desired": 5, "target": 0},
+    {"desired": 0, "target": 4},
+    {"desired": 6, "target": 0}
+  ],
+  "song9": [
+    {"desired": 1, "target": 4},
+    {"desired": 4, "target": 7},
+    {"desired": 1, "target": 4},
+    {"desired": 7, "target": 3},
+    {"desired": 0, "target": 4},
+    {"desired": 7, "target": 3}
+  ],
+  "song10": [
+    {"desired": 1, "target": 4},
+    {"desired": 4, "target": 7},
+    {"desired": 2, "target": 5},
+    {"desired": 0, "target": 6},
+    {"desired": 0, "target": 4},
+    {"desired": 7, "target": 3}
+  ],
+  "song11": [
+    {"desired": 1, "target": 4},
+    {"desired": 4, "target": 7},
+    {"desired": 2, "target": 5},
+    {"desired": 3, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 7, "target": 3}
+  ],
+  "song12": [
+    {"desired": 1, "target": 4},
+    {"desired": 4, "target": 7},
+    {"desired": 2, "target": 5},
+    {"desired": 7, "target": 1},
+    {"desired": 0, "target": 4},
+    {"desired": 7, "target": 3}
+  ],
+  "song13": [
+    {"desired": 1, "target": 4},
+    {"desired": 8, "target": 6},
+    {"desired": 3, "target": 6},
+    {"desired": 9, "target": 4},
+    {"desired": 0, "target": 4},
+    {"desired": 8, "target": 4}
+  ],
+  "song14": [
+    {"desired": 1, "target": 4},
+    {"desired": 8, "target": 6},
+    {"desired": 4, "target": 1},
+    {"desired": 1, "target": 6},
+    {"desired": 0, "target": 4},
+    {"desired": 8, "target": 4}
+  ],
+  "song15": [
+    {"desired": 1, "target": 4},
+    {"desired": 8, "target": 6},
+    {"desired": 4, "target": 2},
+    {"desired": 4, "target": 0},
+    {"desired": 0, "target": 4},
+    {"desired": 8, "target": 4}
+  ],
+  "song16": [
+    {"desired": 0, "target": 3},
+    {"desired": 8, "target": 5},
+    {"desired": 5, "target": 2},
+    {"desired": 7, "target": 2},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song17": [
+    {"desired": 0, "target": 3},
+    {"desired": 9, "target": 6},
+    {"desired": 0, "target": 3},
+    {"desired": 0, "target": 5},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song18": [
+    {"desired": 0, "target": 3},
+    {"desired": 9, "target": 6},
+    {"desired": 0, "target": 3},
+    {"desired": 4, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song19": [
+    {"desired": 0, "target": 3},
+    {"desired": 9, "target": 6},
+    {"desired": 1, "target": 5},
+    {"desired": 1, "target": 7},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song20": [
+    {"desired": 0, "target": 3},
+    {"desired": 9, "target": 6},
+    {"desired": 1, "target": 3},
+    {"desired": 5, "target": 0},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song21": [
+    {"desired": 0, "target": 3},
+    {"desired": 9, "target": 6},
+    {"desired": 5, "target": 9},
+    {"desired": 4, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song22": [
+    {"desired": 1, "target": 4},
+    {"desired": 0, "target": 3},
+    {"desired": 4, "target": 7},
+    {"desired": 9, "target": 4},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song23": [
+    {"desired": 1, "target": 4},
+    {"desired": 2, "target": 6},
+    {"desired": 1, "target": 4},
+    {"desired": 3, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song24": [
+    {"desired": 1, "target": 4},
+    {"desired": 9, "target": 5},
+    {"desired": 0, "target": 4},
+    {"desired": 4, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song25": [
+    {"desired": 1, "target": 4},
+    {"desired": 9, "target": 5},
+    {"desired": 2, "target": 6},
+    {"desired": 1, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song26": [
+    {"desired": 1, "target": 4},
+    {"desired": 9, "target": 5},
+    {"desired": 3, "target": 7},
+    {"desired": 2, "target": 9},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "Hivemind": [
+    {"desired": 2, "target": 6},
+    {"desired": 0, "target": 3},
+    {"desired": 4, "target": 4},
+    {"desired": 3, "target": 8},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "song27": [
+    {"desired": 2, "target": 6},
+    {"desired": 3, "target": 5},
+    {"desired": 5, "target": 9},
+    {"desired": 9, "target": 0},
+    {"desired": 0, "target": 4},
+    {"desired": 9, "target": 5}
+  ],
+  "CHKDSK": [
+    {"desired": 0, "target": 5},
+    {"desired": 0, "target": 3},
+    {"desired": 0, "target": 4},
+    {"desired": 2, "target": 9},
+    {"desired": 1, "target": 4},
+    {"desired": 0, "target": 5}
+  ],
+  "song28": [
+    {"desired": 0, "target": 4},
+    {"desired": 0, "target": 5},
+    {"desired": 0, "target": 4},
+    {"desired": 8, "target": 0},
+    {"desired": 1, "target": 4},
+    {"desired": 0, "target": 4}
+  ],
+  "ACCESS-DENIED": [
+    {"desired": 0, "target": 3},
+    {"desired": 0, "target": 3},
+    {"desired": 0, "target": 4},
+    {"desired": 7, "target": 0},
+    {"desired": 1, "target": 4},
+    {"desired": 0, "target": 3}
+  ],
+  "song29": [
+    {"desired": 0, "target": 4},
+    {"desired": 0, "target": 3},
+    {"desired": 2, "target": 5},
+    {"desired": 0, "target": 7},
+    {"desired": 2, "target": 6},
+    {"desired": 9, "target": 4}
+  ]
+}

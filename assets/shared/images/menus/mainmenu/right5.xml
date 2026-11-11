@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="right5.png">
+	<!-- Created with Adobe Animate version 22.0.1.105 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="layer50000" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50001" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50002" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50003" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50004" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50005" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50006" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50007" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50008" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50009" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50010" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50011" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50012" x="8" y="8" width="1597" height="635"/>
+	<SubTexture name="layer50013" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50014" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50015" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50016" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50017" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50018" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50019" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50020" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50021" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50022" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50023" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50024" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50025" x="8" y="651" width="1597" height="635"/>
+	<SubTexture name="layer50026" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50027" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50028" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50029" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50030" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50031" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50032" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50033" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50034" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50035" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50036" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50037" x="8" y="1294" width="1597" height="635"/>
+	<SubTexture name="layer50038" x="8" y="1294" width="1597" height="635"/>
+</TextureAtlas>

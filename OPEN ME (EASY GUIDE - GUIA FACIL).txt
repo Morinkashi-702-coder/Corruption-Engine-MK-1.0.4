@@ -1,0 +1,466 @@
+CORRUPTION ENGINE MK - PSYCH ENGINE PORT
+OPEN ME: EASY BUILD GUIDE / GUÍA FÁCIL
+============================================================
+IMPORTANT NOTICE / AVISO IMPORTANTE
+------------------------------------------------------------
+ENGLISH:
+Read this entire document before running commands or changing
+your computer's configuration. Back up your important files.
+You are responsible for the commands you run and the changes
+you make. Morinkashi_702 does not accept responsibility for
+damage to your computer, operating system or files resulting
+from incorrect use of these instructions, skipped steps or
+changes made without understanding them. If you skip this
+document or follow it incorrectly, the resulting mistakes are
+your responsibility. If a step is unclear, stop and ask before
+continuing.
+
+ESPAÑOL:
+Lee este documento completo antes de ejecutar comandos o
+cambiar la configuración de tu PC. Haz una copia de seguridad
+de tus archivos importantes. Tú eres responsable de los
+comandos que ejecutas y de los cambios que haces.
+Morinkashi_702 no se hace responsable de daños en tu PC,
+sistema operativo o archivos derivados de usar incorrectamente
+estas instrucciones, saltarte pasos o hacer cambios sin
+entenderlos. Si no lees el documento o lo sigues mal, los
+errores derivados de ello son responsabilidad tuya. Si no
+entiendes un paso, detente y pregunta antes de continuar.
+------------------------------------------------------------
+
+English first. Español más abajo.
+Checked / Comprobado: 2026-11-08
+
+For the full technical details, read:
+OPEN ME (BUILD AND CREDITS).txt
+
+============================================================
+ENGLISH - LET'S TAKE IT ONE STEP AT A TIME
+============================================================
+
+1. DO YOU REALLY NEED TO COMPILE?
+------------------------------------------------------------
+If you only want to play, download the ready-to-play engine.
+You do NOT need Haxe or the tools below just to play.
+
+This guide is for people who want to change the engine's
+source code and turn those changes into a new .exe.
+That process is called "compiling".
+
+This project is based on Psych Engine 1.0.4.
+The instructions here are for Windows.
+
+
+2. INSTALL THE BASIC TOOLS
+------------------------------------------------------------
+- Haxe 4.3.4:
+  https://haxe.org/download/
+  Use the 4.3.4 download, not a random newer version.
+  Make sure Haxelib and Neko work too.
+
+- Git:
+  https://git-scm.com/downloads
+  It downloads some of the libraries used by this engine.
+
+- Visual Studio / Build Tools:
+  https://visualstudio.microsoft.com/downloads/
+  In its installer, select "Desktop development with C++".
+  Include the MSVC x64/x86 tools and Windows SDK.
+  This project has been built using MSVC 14.44.35207
+  and Windows SDK 10.0.22621.0.
+
+A "library" is code that the engine uses instead of writing
+everything from scratch. Haxelib downloads those libraries.
+
+Close and reopen your terminal after installing the tools.
+To check Haxe, type this and press Enter:
+
+haxe --version
+
+It should say 4.3.4.
+If Windows does not recognize the command, check your Haxe
+installation and PATH before continuing.
+If Haxelib asks for a library folder, choose a folder you
+can write to. You do not need the maintainer's personal path.
+
+
+3. DOWNLOAD THESE EXACT LIBRARIES
+------------------------------------------------------------
+Copy ONE command at a time, press Enter, and wait for it
+to finish before running the next command.
+If a command fails, stop and read the error first.
+
+haxelib install lime 8.1.2
+haxelib install openfl 9.3.3
+haxelib install flixel 5.6.1
+haxelib install flixel-addons 3.2.2
+haxelib install tjson 1.4.0
+haxelib install hscript-iris 1.1.3
+haxelib install hscript 2.7.0
+haxelib install hxvlc 2.2.6
+haxelib install hxdiscord_rpc 1.2.4
+haxelib install tink_core 1.26.0
+
+These five libraries come from Git instead.
+Each command selects the exact recorded revision.
+Do not remove the long code at the end: it identifies that
+revision. A normal version number alone is not enough.
+
+haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp.git f3b70445c3904313d148f2c2bbc83ef42a968bdb
+haxelib git linc_luajit https://github.com/superpowers04/linc_luajit daf0664aee99aa8b8d6bdd1eda993a1c3a399067
+haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate 768740a56b26aa0c072720e0d1236b94afe68e3e
+haxelib git grig.audio https://gitlab.com/haxe-grig/grig.audio.git cbf91e2180fd2e374924fe74844086aab7891666
+haxelib git funkin.vis https://github.com/FunkinCrew/funkVis 22b1ce089dd924f15cdc4632397ef3504d464e90
+
+If a command asks to replace a library that you have modified,
+back up your changes before accepting.
+
+Now select the versions that we want to use:
+
+haxelib set lime 8.1.2
+haxelib set openfl 9.3.3
+haxelib set flixel 5.6.1
+haxelib set flixel-addons 3.2.2
+haxelib set tjson 1.4.0
+haxelib set hscript-iris 1.1.3
+haxelib set hscript 2.7.0
+haxelib set hxvlc 2.2.6
+haxelib set hxdiscord_rpc 1.2.4
+haxelib set tink_core 1.26.0
+
+"install" downloads a version. "set" chooses which installed
+version to use. Installing a library can also download other
+libraries that it needs.
+
+Check what is selected:
+
+haxelib list
+
+Versions in square brackets are selected.
+For example: openfl: [9.3.3]
+Do not use OpenFL 9.5.1 for this setup: switching to 9.3.3
+fixed the blurry editor text seen in this project.
+
+
+4. BUILD AND OPEN THE GAME
+------------------------------------------------------------
+Find the engine's source folder. It contains Project.xml,
+source and assets. Open a terminal in THAT folder.
+
+In Windows File Explorer, open that folder, click its address
+bar, type cmd and press Enter.
+
+Close the game first. Then run:
+
+haxelib run lime test windows
+
+This builds the engine and opens it.
+The first build can take a while. Text scrolling through the
+terminal is normal; it is not automatically an error.
+
+If you only want to build without opening the game, use:
+
+haxelib run lime build windows
+
+You can also use these shorter commands if your computer
+recognizes the "lime" command:
+
+lime test windows
+lime build windows
+
+"test" builds AND opens the game. "build" only builds it.
+If Windows says it cannot find "lime", use the corresponding
+"haxelib run lime" command above. It runs the same tool through
+Haxelib; you still need to install the required libraries.
+
+ABOUT LOW-END PCs:
+The first build makes the CPU work hard and can use a lot of
+RAM. We do not recommend doing it on a low-end PC if you need
+to keep using it smoothly: compiling can take a long time and
+slow down other programs. That does not mean it is impossible
+or that waiting a long time automatically means an error.
+Later builds usually take less time because they reuse work.
+If you only want to play, download the ready-to-play engine.
+You do not have to compile anything!
+
+The new game should be here:
+
+export\release\windows\bin\PsychEngine.exe
+
+If you see "lime.ndll is in use" or "Cannot copy", make sure
+all copies of the game are closed and try again.
+
+Do NOT use "lime clean windows" as a quick fix.
+It can remove build files from export, where your mods may
+also be stored. Keep a separate backup of your work.
+
+
+5. IF IT STILL DOES NOT BUILD
+------------------------------------------------------------
+Do not install every latest version to see what happens.
+First check the versions with haxelib list, and check that
+the C++ workload and Windows SDK are installed.
+
+Some native libraries may require their own setup/build
+steps on a new computer. The recorded environment works on
+the maintainer's PC, but this guide has not been tested from
+scratch on a second PC.
+
+Copy the actual error and say which command produced it.
+That is more useful than only saying "it doesn't work".
+The full OPEN ME document includes the exact dependency
+revisions and more details about optional tools.
+
+
+6. WHO MADE IT? WAS AI USED?
+------------------------------------------------------------
+Morinkashi_702 maintains this fork and directs the project.
+The original Psych Engine is by Shadow Mario and contributors:
+https://github.com/ShadowMario/FNF-PsychEngine
+
+Yes: ChatGPT and Codex helped with parts of the code,
+debugging, explanations and documentation.
+That does not mean that the entire engine was AI-generated.
+Morinkashi_702 chose the changes and tested them during
+development. Original and third-party work still belongs
+to its respective authors.
+
+This is not an official Psych Engine or OpenAI release.
+
+If you use this source, please credit Morinkashi_702 and
+Shadow Mario / the Psych Engine contributors.
+Keep the existing credits and LICENSE.
+The credit request does not replace the license.
+Check permissions before redistributing other people's
+music, characters, images or videos.
+
+Suggested credit:
+"Based on Corruption Engine MK - Psych Engine Port by
+Morinkashi_702, based on Psych Engine 1.0.4 by Shadow Mario
+and contributors. Developed with AI assistance."
+
+Do not share private saves, reports, passwords or backups
+with your source release. Test the downloadable package
+separately before publishing it.
+
+END OF ENGLISH
+
+
+============================================================
+ESPAÑOL - VAMOS PASO A PASO
+============================================================
+
+1. ¿DE VERDAD NECESITAS COMPILAR?
+------------------------------------------------------------
+Si solo quieres jugar, descarga el engine ya preparado.
+NO necesitas Haxe ni las herramientas de abajo para jugar.
+
+Esta guía es para cambiar el código del engine y convertir
+esos cambios en un nuevo .exe. Eso se llama "compilar".
+
+El proyecto está basado en Psych Engine 1.0.4.
+Estas instrucciones son para Windows.
+
+
+2. INSTALA LAS HERRAMIENTAS BÁSICAS
+------------------------------------------------------------
+- Haxe 4.3.4:
+  https://haxe.org/download/
+  Busca la descarga 4.3.4, no otra versión más nueva porque sí.
+  Comprueba también que funcionan Haxelib y Neko.
+
+- Git:
+  https://git-scm.com/downloads
+  Sirve para descargar algunas librerías del engine.
+
+- Visual Studio / Build Tools:
+  https://visualstudio.microsoft.com/downloads/
+  En el instalador marca:
+  "Desarrollo para el escritorio con C++".
+  Incluye las herramientas MSVC x64/x86 y Windows SDK.
+  Este proyecto se ha compilado con MSVC 14.44.35207
+  y Windows SDK 10.0.22621.0.
+
+Una "librería" es código que utiliza el engine para no tener
+que programarlo todo desde cero. Haxelib las descarga.
+
+Después de instalar las herramientas, cierra y vuelve a abrir
+la terminal. Para comprobar Haxe, escribe y pulsa Enter:
+
+haxe --version
+
+Debería decir 4.3.4.
+Si Windows no reconoce el comando, revisa la instalación
+de Haxe y su PATH antes de seguir. PATH es la lista de
+carpetas donde Windows busca los comandos.
+
+Si Haxelib te pregunta dónde guardar las librerías, elige
+una carpeta donde tengas permiso de escritura. No necesitas
+usar la ruta personal del creador del engine.
+
+
+3. DESCARGA ESTAS VERSIONES DE LAS LIBRERÍAS
+------------------------------------------------------------
+Copia UN comando, pulsa Enter y espera a que termine
+antes de ejecutar el siguiente.
+Si alguno falla, para y lee el error antes de continuar.
+
+haxelib install lime 8.1.2
+haxelib install openfl 9.3.3
+haxelib install flixel 5.6.1
+haxelib install flixel-addons 3.2.2
+haxelib install tjson 1.4.0
+haxelib install hscript-iris 1.1.3
+haxelib install hscript 2.7.0
+haxelib install hxvlc 2.2.6
+haxelib install hxdiscord_rpc 1.2.4
+haxelib install tink_core 1.26.0
+
+Estas cinco librerías se descargan desde Git.
+Cada comando selecciona la revisión exacta registrada.
+No borres el código largo del final: identifica esa revisión.
+El número de versión por sí solo no basta en estos casos.
+
+haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp.git f3b70445c3904313d148f2c2bbc83ef42a968bdb
+haxelib git linc_luajit https://github.com/superpowers04/linc_luajit daf0664aee99aa8b8d6bdd1eda993a1c3a399067
+haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate 768740a56b26aa0c072720e0d1236b94afe68e3e
+haxelib git grig.audio https://gitlab.com/haxe-grig/grig.audio.git cbf91e2180fd2e374924fe74844086aab7891666
+haxelib git funkin.vis https://github.com/FunkinCrew/funkVis 22b1ce089dd924f15cdc4632397ef3504d464e90
+
+Si un comando pide sustituir una librería que tú modificaste,
+haz un backup de esos cambios antes de aceptar.
+
+Ahora selecciona las versiones que queremos utilizar:
+
+haxelib set lime 8.1.2
+haxelib set openfl 9.3.3
+haxelib set flixel 5.6.1
+haxelib set flixel-addons 3.2.2
+haxelib set tjson 1.4.0
+haxelib set hscript-iris 1.1.3
+haxelib set hscript 2.7.0
+haxelib set hxvlc 2.2.6
+haxelib set hxdiscord_rpc 1.2.4
+haxelib set tink_core 1.26.0
+
+"install" descarga una versión. "set" selecciona cuál usar.
+Al instalar una librería también pueden descargarse otras
+que necesita para funcionar.
+
+Comprueba lo seleccionado:
+
+haxelib list
+
+Las versiones entre corchetes son las seleccionadas.
+Ejemplo: openfl: [9.3.3]
+No uses OpenFL 9.5.1 para este entorno: cambiar a 9.3.3
+solucionó los textos borrosos observados en el proyecto.
+
+
+4. COMPILA Y ABRE EL JUEGO
+------------------------------------------------------------
+Busca la carpeta del source. Dentro tiene que estar
+Project.xml, junto con las carpetas source y assets.
+La terminal se tiene que abrir en ESA carpeta.
+
+En el Explorador de Windows, abre esa carpeta, pulsa su
+barra de direcciones, escribe cmd y pulsa Enter.
+
+Cierra el juego y ejecuta:
+
+haxelib run lime test windows
+
+Esto compila el engine y luego lo abre.
+La primera compilación puede tardar. Que salgan muchos
+nombres de archivos en la terminal no significa que haya
+un error.
+
+Para compilar sin abrir el juego:
+
+haxelib run lime build windows
+
+También puedes usar estos comandos más cortos si tu PC
+reconoce el comando "lime":
+
+lime test windows
+lime build windows
+
+"test" compila Y abre el juego. "build" solo lo compila.
+Si Windows dice que no encuentra "lime", usa el comando
+equivalente de arriba con "haxelib run lime". Ejecuta la misma
+herramienta mediante Haxelib; las librerías siguen haciendo falta.
+
+SOBRE LOS PCs DE GAMA BAJA:
+La primera compilación hace trabajar mucho a la CPU y puede
+usar bastante RAM. No recomendamos hacerla en un PC de gama
+baja si necesitas seguir usándolo con fluidez: puede tardar
+mucho y hacer que otros programas vayan lentos. Eso no quiere
+decir que sea imposible ni que tardar mucho sea siempre un error.
+Las siguientes suelen tardar menos porque reutilizan trabajo.
+Si solo quieres jugar, descarga el engine listo para jugar.
+¡No tienes que compilar nada!
+
+El nuevo ejecutable debería estar aquí:
+
+export\release\windows\bin\PsychEngine.exe
+
+Si aparece "lime.ndll is in use" o "Cannot copy", comprueba
+que no haya ninguna copia del juego abierta y reinténtalo.
+
+NO uses "lime clean windows" como arreglo rápido.
+Puede eliminar archivos de compilación de export, donde
+también puedes tener tus mods. Guarda un backup separado.
+
+
+5. ¿SIGUE SIN COMPILAR?
+------------------------------------------------------------
+No actualices todas las librerías a la última versión
+a ver si funciona. Primero revisa haxelib list y comprueba
+que instalaste C++ y Windows SDK.
+
+Algunas librerías nativas pueden necesitar pasos propios
+de preparación/compilación en un ordenador nuevo.
+El entorno registrado funciona en el PC del mantenedor,
+pero no se ha probado esta guía desde cero en otro PC.
+
+Copia el error real y di qué comando ejecutaste.
+Eso ayuda mucho más que decir solamente "no funciona".
+El otro OPEN ME tiene más detalles de las dependencias
+y de las herramientas opcionales.
+
+
+6. ¿QUIÉN LO HIZO? ¿SE UTILIZÓ IA?
+------------------------------------------------------------
+Morinkashi_702 mantiene este fork y dirige el proyecto.
+El Psych Engine original es de Shadow Mario y colaboradores:
+https://github.com/ShadowMario/FNF-PsychEngine
+
+Sí: ChatGPT y Codex ayudaron con partes del código,
+la depuración, las explicaciones y la documentación.
+Eso no significa que todo el engine se generara con IA.
+Morinkashi_702 eligió los cambios y los probó durante el
+desarrollo. El trabajo original y los aportes de terceros
+siguen siendo de sus respectivos autores.
+
+No es una versión oficial de Psych Engine ni de OpenAI.
+
+Si utilizas este source, por favor da créditos a
+Morinkashi_702 y a Shadow Mario y los colaboradores de
+Psych Engine. Conserva los créditos existentes y LICENSE.
+La petición de créditos no sustituye la licencia.
+Revisa los permisos antes de redistribuir música,
+personajes, imágenes o vídeos de otras personas.
+
+Crédito sugerido:
+"Basado en Corruption Engine MK - Psych Engine Port, de
+Morinkashi_702, basado en Psych Engine 1.0.4, de Shadow Mario
+y colaboradores. Desarrollado con asistencia de IA."
+
+No publiques partidas personales, reportes, contraseñas
+ni backups junto al source. Prueba el paquete descargable
+por separado antes de publicarlo.
+
+¡Y listo! No hace falta sabérselo todo desde el primer día.
+
+FIN DE LA GUÍA EN ESPAÑOL
+

@@ -1,0 +1,24 @@
+import MusicBeatState;
+import flixel.addons.transition.FlxTransitionableState;
+
+
+function onStateCreate(){
+	if (FlxG.save.data.seenIntro == null)
+		FlxG.save.data.seenIntro = false;
+	
+
+    FlxTransitionableState.skipNextTransIn = true;
+    FlxTransitionableState.skipNextTransOut = true;
+
+	trace("fuck");
+
+	if (FlxG.save.data.seenIntro == false){
+		FlxG.save.data.seenIntro = true;
+		var state = new HScriptState("notices");
+		MusicBeatState.switchState(state);
+	} else {
+		var state = new HScriptState("softCodeMenu");
+		state.stateScript.set("showTitle", true);
+		MusicBeatState.switchState(state);
+	}
+}

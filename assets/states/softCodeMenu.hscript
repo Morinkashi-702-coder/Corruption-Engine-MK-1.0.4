@@ -1,0 +1,1756 @@
+
+
+showTitle = false;
+var object:FlxSprite;
+
+var titleScreen:FlxSpriteGroup;
+var optionText:FlxSpriteGroup;
+var selectedText:FlxSpriteGroup;
+var optionBg:FlxSpriteGroup;
+var freeplayText:FlxSpriteGroup;
+var freeplaySelectedText:FlxSpriteGroup;
+var freeplayBg:FlxSpriteGroup;
+var difficulties:FlxSpriteGroup;
+
+var diffSelectR:FlxSprite;
+var diffSelectL:FlxSprite;
+
+var camera:FlxCamera;
+
+// camera
+var camFollow:FlxSprite;
+var camFollowPos:FlxObject;
+
+// clock
+var values:Array<{ target, desired, speed, prev }> = [];
+var num1:FlxSprite;
+var num2:FlxSprite;
+var num3:FlxSprite;
+var num4:FlxSprite;
+var num5:FlxSprite;
+var num6:FlxSprite;
+
+// visuals
+var middle:FlxSpriteGroup;
+var right:FlxSpriteGroup;
+var bfFloat:FlxSprite;
+var layer2:FlxSprite;
+var blackFade:FlxSprite;
+var fullBlack:FlxSprite;
+var blackCovering:FlxSprite;
+var blackTop:FlxSprite;
+
+// sorry
+var titleLogo:FlxSprite;
+var titlePart0:FlxSprite;
+var titlePart1:FlxSprite;
+var titlePart2:FlxSprite;
+var titlePart3:FlxSprite;
+var titlePart4:FlxSprite;
+var titlePart5:FlxSprite;
+var titlePart6:FlxSprite;
+
+// extras menu
+var bfFloatRed:FlxSprite;
+var bgRed:FlxSprite;
+var buildingRed:FlxSprite;
+var chainRed:FlxSprite;
+var ifBg:FlxSprite;
+var ifText:FlxSprite;
+var ifSelected:FlxSprite;
+var sidestoryBg:FlxSprite;
+var sidestoryText:FlxSprite;
+var sidestorySelected:FlxSprite;
+
+// functionality
+var curSelected:Int = 0;
+var curSelectedFreeplay:Int = 0;
+var prevSelectedFreeplay:Int = 0;
+var curDiff:Int = 2;
+var curSelectedExtra:Int = 0;
+var selectedSomethin:Bool = false;
+var canSelect:Bool = true;
+var curMenu:String = "title";
+
+// audio
+var musicGroup:FlxTypedGroup<FlxSound>;
+
+// shader stuff
+var water:Shader;
+var blur:Shader;
+var lens:Shader;
+var increaseTime = 0;
+var blurAmount = 0.00;
+var maxBlur = 0.05;
+var blurAngle = 90;
+
+// tweens
+var initialTween:FlxTween;
+var harvesterEye:FlxTween;
+var diffTween:FlxTween;
+var diffSelectRightTween:FlxTween;
+var diffSelectLeftTween:FlxTween;
+
+var transition:FlxSprite;
+
+var menuRevealed:Bool = false;
+
+// TIMES EVENTS HAPPEN (If anyone is interested)
+// yes, we really had a call figuring this shit out just for the freeplay menu clock
+// enjoy our findings (down to the second)
+//
+// NULL AND VOID (start of first cutscene): Jan 09, 23:59.57pm
+// Harvester appears: Jan 10, 00:00.00am  (Chooses to reveal himself on the dot midnight, bro is like that)
+// NULL AND VOID (SONG START): Jan 10, 00:01.11am 
+// CHKDSK (SENPAI TRANSFORM): Jan 10, 00:02.55am (There is a few cutscenes before this, but timer is bias towards the song name, so this time appears on the freeplay)
+// CONSOLE CRASHES: Jan 10, 00:06.34 (This time differs slightly between OG video and DEMO, DEMO has a shortened cutscene, we are using OG video timings cuz that stuff still happens even when it is no longer shown.)
+// Access Denied (SONG START): Jan 10, 00:07.00 (Roughly based on the time it would take a PS1 to turn off and back on again)
+// Bloodlust (First cutscene): Jan 10, 00:08.05
+// GF runs past BF: Jan 10, 00:11.16
+//
+
+function onStateCreate(){
+	Paths.clearStoredMemory();
+
+    this.persistentUpdate = false;
+	this.persistentDraw = true;
+
+    //FadeTransitionSubstate.nextCamera = FlxG.camera; // AAAA
+
+	camera = new FlxCamera();
+	FlxG.cameras.reset(camera);
+    
+    Paths.pushGlobalContent();
+    Paths.loadTheFirstEnabledMod();
+    FlxG.mouse.visible = false;
+    FlxG.camera.bgColor = FlxColor.BLACK;
+
+/*     FlxG.save.data.seenCutscene = false;
+    FlxG.save.data.storyTime = false; // idk how story mode works in this engine so im botching it for now LMAO */
+
+    camFollow = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
+    camFollow.alpha = 0;
+    camFollow.setPosition(951,570);
+    //FlxTween.tween(camFollowPos,  {x: camFollowPos.x + 1000}, 1.0, {ease: FlxEase.sineInOut, type: FlxTween.PINGPONG});
+    camFollowPos = new FlxObject(951,-270, 1, 1);
+    add(camFollow);
+    add(camFollowPos);
+
+    FlxG.camera.zoom = 0.593;
+    FlxG.camera.follow(camFollowPos, null, 1);
+
+    middle = new FlxSpriteGroup();
+    add(middle);
+    right = new FlxSpriteGroup();
+    add(right);
+
+    values = [
+        { target: 0, desired: 0, speed: 10.0, prev: 0 },
+        { target: 0, desired: 0, speed: 10.0, prev: 50 },
+        { target: 0, desired: 0, speed: 10.0, prev: 30 },
+        { target: 0, desired: 0, speed: 20.0, prev: 10 },
+        { target: 0, desired: 0, speed: 10.0, prev: 5 },
+        { target: 0, desired: 0, speed: 20.0, prev: 0 }
+    ];
+
+    addMiddleShit();
+    addRightShit();
+    addExtraShit();
+    addTextShit();
+    addFreeplayText();
+	blackCovering = new FlxSprite(10,-20).makeGraphic(3000, 3000, FlxColor.BLACK);
+    add(blackCovering);
+    blackCovering.scrollFactor.set(0,0);
+    blackCovering.scale.set(2,2);
+
+    object = blackCovering;
+
+	if(showTitle)
+    	addTitleShit();
+
+    if (FlxG.save.data.seenIfNotice == null){
+        FlxG.save.data.seenIfNotice = false;
+    }
+
+    if (FlxG.save.data.seenSidestoryNotice == null){
+        FlxG.save.data.seenSidestoryNotice = false;
+    }
+
+    // transition = new MP4Sprite();
+	// transition.blend = 9;
+	// transition.alpha = 0;
+    // transition.bitmap.onFormatSetup.add(function()
+    // {
+    //     transition.scale.set(1.5,1.5);
+    //     transition.updateHitbox();
+    //     transition.x = -350;
+	// 	transition.y = -220;
+    // });
+	
+    // //transition.bitmap.onEndReached.add(destroyVid(transition));
+    // add(transition);
+    // transition.scrollFactor.set(0,0);
+	// transition.load(Paths.video('burnTransition'), [':input-repeat=0']);
+    // transition.play();
+    // transition.stop();
+
+    transition = new FlxSprite();
+    transition.frames = Paths.getSparrowAtlas('burnTransition');
+    transition.animation.addByPrefix("idle", 'burnTransition idle', 24, false);
+    transition.animation.play("idle", true);
+    transition.scrollFactor.set(0,0);
+    transition.scale.set(2.5,2.5);
+    transition.antialiasing = true;
+    transition.alpha = 0;
+    transition.blend = 9;
+    add(transition);
+	transition.setPosition(150,119);
+    
+	    
+	if(!showTitle)
+		return;
+	
+
+    blackTop = new FlxSprite(10,-20, Paths.image('menus/mainmenu/fullBlack'));
+    add(blackTop);
+    blackTop.scrollFactor.set(0,0);
+    blackTop.scale.set(1.7,1.7);
+
+    //eye over black
+    titlePart6 = new FlxSprite(740,-870, Paths.image('menus/title/title6'));
+    titlePart6.scrollFactor.set(1,1);
+    titlePart6.scale.set(1,1);
+    add(titlePart6);
+
+    FlxTween.tween(blackTop,  {alpha: 0}, 3.0, {ease: FlxEase.sineInOut});
+
+    harvesterEye = FlxTween.tween(titlePart6,  {alpha: 0.1}, 6.0, {ease: FlxEase.sineInOut, type: FlxTween.PINGPONG});
+}
+
+function destroyVid(video){
+	return ()->{
+		trace("dead");
+		remove(video);
+		video.destroy();
+	}
+}
+
+function onStateCreatePost(){
+    addShaderShit();
+    right.setPosition(2510,0);
+
+    updateDifficulty();
+
+    addMusicShit();
+
+	if(!showTitle)
+		enterMain(true);
+
+	Paths.clearUnusedMemory();
+}
+
+function onUpdatePost(elapsed){
+    blur.data.strength.value = [blurAmount];
+    blur.data.angle.value = [blurAngle];
+}
+
+function enterMain(skipTransition){
+	curMenu = "main";
+	if(skipTransition){
+		if(blackCovering != null)blackCovering.alpha = 0;
+		if(titlePart1 != null)titlePart1.alpha = 1;
+		bfFloat.y = bfFloat.y + 10;
+		camFollowPos.y = 570;
+		updateMusic(0);
+		lens.data.ushaderStrength.value = [0.5];
+
+		// for(opt in optionText.members){
+        //     opt.alpha = 0.2;
+        // }
+
+        for (i in 1...5) {
+            optionText.members[i].alpha = 0.2;
+        }
+			
+
+		selectedText.members[0].alpha = 1;
+		optionBg.members[0].alpha = 0.2;
+		canSelect = true;
+		menuRevealed = true;
+
+	}else{
+		harvesterEye.cancel();
+
+		FlxG.sound.play(Paths.sound('confirmMenu'));
+
+		initialTween = FlxTween.tween(camFollowPos, {y: 570}, 6, {ease: FlxEase.backOut});
+		FlxTween.tween(bfFloat,  {y: bfFloat.y + 10}, 15.0, {ease: FlxEase.sineInOut});
+
+		playBubbleAnimation();
+		updateMusic(0);
+
+		if (!menuRevealed){
+			revealMainMenuTexts();
+			hideTitleShit();
+		} else {
+			new FlxTimer().start(1, function(tmr){
+				canSelect = true;
+				tmr.destroy();
+			});
+		}
+
+		FlxTween.tween(blackCovering,  {alpha: 0}, 1.0, {ease: FlxEase.sineInOut});
+		FlxTween.tween(titlePart1, {alpha: 0}, 0.5, {ease: FlxEase.sineInOut});
+
+		FlxTween.num(0.0, 0.5, 0.8, {ease: FlxEase.sineInOut}, function(hi){
+			lens.data.ushaderStrength.value = [hi];
+		});
+	}
+}
+
+function hideTitleShit(){
+    new FlxTimer().start(0.0, function(tmr){
+        FlxTween.tween(titlePart0, {alpha: 0}, 0.4, {ease: FlxEase.sineIn});
+        FlxTween.tween(titlePart6, {alpha: 0}, 0.4, {ease: FlxEase.sineIn});
+        FlxTween.tween(titlePart2, {alpha: 0}, 0.4, {ease: FlxEase.sineIn});
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(0.1, function(tmr){
+        
+        FlxTween.tween(titlePart3, {alpha: 0}, 0.4, {ease: FlxEase.sineIn});
+        FlxTween.tween(titlePart4, {alpha: 0}, 0.6, {ease: FlxEase.sineIn});
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(0.2, function(tmr){
+        FlxTween.tween(titlePart5, {alpha: 0}, 0.4, {ease: FlxEase.sineIn});
+        FlxTween.tween(titleLogo, {alpha: 0}, 0.4, {ease: FlxEase.sineIn});
+        tmr.destroy();
+    });
+
+}
+
+function addTitleShit(){
+
+    titleScreen = new FlxSpriteGroup();
+    add(titleScreen);
+    titleScreen.setPosition(740,-870);
+    titleScreen.scale.set(1.1,1.1);
+
+    titlePart0 = new FlxSprite(0,0, Paths.image('menus/title/title0'));
+    titlePart0.scrollFactor.set(1,1);
+    titlePart0.scale.set(1,1);
+    titleScreen.add(titlePart0);
+
+    titlePart1 = new FlxSprite(0,164, Paths.image('menus/title/title1'));
+    titlePart1.scrollFactor.set(1,1);
+    titlePart1.scale.set(1,1);
+    titleScreen.add(titlePart1);
+
+    titlePart2 = new FlxSprite(0,0, Paths.image('menus/title/title2'));
+    titlePart2.scrollFactor.set(1,1);
+    titlePart2.scale.set(1,1);
+    titleScreen.add(titlePart2);
+
+    titlePart3 = new FlxSprite(0,0, Paths.image('menus/title/title3'));
+    titlePart3.scrollFactor.set(1,1);
+    titlePart3.scale.set(1,1);
+    titleScreen.add(titlePart3);
+
+    titlePart4 = new FlxSprite(0,0, Paths.image('menus/title/title4'));
+    titlePart4.scrollFactor.set(1,1);
+    titlePart4.scale.set(1,1);
+    titleScreen.add(titlePart4);
+
+    titlePart5 = new FlxSprite(0,0, Paths.image('menus/title/title5'));
+    titlePart5.scrollFactor.set(1,1);
+    titlePart5.scale.set(1,1);
+    titleScreen.add(titlePart5);
+
+    titleLogo = new FlxSprite(-870,-770, Paths.image('menus/title/titleLogo'));
+    titleLogo.scrollFactor.set(1,1);
+    titleLogo.scale.set(0.38,0.38);
+    add(titleLogo);
+}
+
+function onUpdate(elapsed){
+    increaseTime += elapsed;
+    water.data.iTime.value = [increaseTime];
+    lens.data.iTime.value = [increaseTime];
+    blur.data.iTime.value = [increaseTime];
+
+    inputShit();
+
+    if (curMenu != "freeplay") {return;}
+
+    // clock shit
+    // this is prolly so shit for optimization im sorry :pensive:
+    for(i in 0...6){
+        var step = values[i].speed * elapsed;
+
+        if (values[i].target < values[i].desired) {
+            values[i].target += step;
+            if (values[i].target > values[i].desired) {
+                values[i].target = values[i].desired;
+            }
+        } else if (values[i].target > values[i].desired) {
+            values[i].target -= step;
+            if (values[i].target < values[i].desired) {
+                values[i].target = values[i].desired;
+            }
+        }
+
+        if (Math.round(values[i].target) != Math.round(values[i].prev)) {
+            switch (i){
+                case 0:
+                    num1.animation.play(Math.round(values[i].target), true);
+                case 1:
+                    num2.animation.play(Math.round(values[i].target), true);
+                case 2:
+                    num3.animation.play(Math.round(values[i].target), true);
+                case 3:
+                    num4.animation.play(Math.round(values[i].target), true);
+                    FlxG.sound.play(Paths.sound('clockTick'+FlxG.random.int(0,4)));
+                case 4:
+                    num5.animation.play(Math.round(values[i].target), true);
+                case 5:
+                    num6.animation.play(Math.round(values[i].target), true);
+            }
+            values[i].prev = values[i].target; 
+        }
+    }
+}
+
+function addMusicShit(){
+    MusicBeatState.stopMenuMusic();
+    musicGroup = new FlxTypedGroup();
+    add(musicGroup);
+
+    for(i in 0...6){
+        FlxG.sound.cache(Paths.music('menu' + i));
+    }
+
+    for(i in 0...6){
+        var musicPlayer:FlxSound = new FlxSound();
+        musicPlayer = new FlxSound().loadEmbedded(Paths.music('menu' + i),true);
+        if (i == 5){
+            musicPlayer.volume = 1;
+        }else {
+            musicPlayer.volume = 0;
+        }
+        musicPlayer.play();
+		FlxG.sound.list.add(musicPlayer);
+        musicGroup.add(musicPlayer);
+    }
+}
+
+function updateMusic(which:Int){
+    for(i in 0...6){
+        if (which == 4){
+            if (musicGroup.members[i].volume != 0){
+                musicGroup.members[i].fadeOut(1,0);
+            }
+        }
+        else if (i == which){
+            if (musicGroup.members[i].volume != 1){
+                musicGroup.members[i].fadeIn(1,0,1);
+            }
+        } else{
+            if (musicGroup.members[i].volume != 0){
+                musicGroup.members[i].fadeOut(1,0);
+            }
+            
+        }
+    }
+}
+
+
+function easierTweenRight(tween:FlxTween)
+{
+    initialTween = FlxTween.tween(camFollowPos, {x: 5221, y: 570}, 0.8, {ease: FlxEase.backOut});
+}
+
+function easierTweenLeft(tween:FlxTween)
+{
+    initialTween = FlxTween.tween(camFollowPos, {x: 951, y: 570}, 1.2, {ease: FlxEase.backOut});
+}
+
+function easierTweenDown(tween:FlxTween)
+{
+    camFollowPos.y = -370;
+    bfFloat.alpha = 0;
+    bfFloatRed.alpha = 1;
+    initialTween = FlxTween.tween(camFollowPos, {y: 570}, 1.2, {ease: FlxEase.backOut});
+}
+
+function easierTweenUp(tween:FlxTween)
+{
+    camFollowPos.y = -370;
+    bfFloat.alpha = 1;
+    bfFloatRed.alpha = 0;
+    initialTween = FlxTween.tween(camFollowPos, {y: 570}, 1.2, {ease: FlxEase.backOut});
+    FlxTween.tween(blackFade,  {alpha: 1}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(fullBlack,  {alpha: 1}, 1.0, {ease: FlxEase.sineOut});
+}
+
+function inputShit(){
+    if (!canSelect){return;}
+
+    if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER|| FlxG.keys.justPressed.Z){
+        if (curMenu == "title"){
+            canSelect = false;
+            enterMain(false);
+        } else if (curMenu == "freeplay"){
+            FlxG.sound.play(Paths.sound('confirmMenu'));
+            var substate = new HScriptSubstate("difficultySelector");
+			if(!substate.script.errored){
+				substate.script.set("settingStory", false);
+				substate.script.set("callback", (_, modchartDifficulty)->{
+					canSelect = false;
+					PlayState.modchartDifficulty = modchartDifficulty;
+					startSong();
+				});
+				this.openSubState(substate);
+			}
+        } else if (curMenu == "extras"){
+            if (curSelectedExtra == 0){
+                startIf();
+            } else {
+                startSidestory();
+            }
+        }else {
+            checkSelection(curSelected);
+        }
+    }
+
+    if (FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE|| FlxG.keys.justPressed.X){
+        if (curMenu != "title" && curMenu != "main"){
+            backOut();
+        }
+    }
+
+    if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.W)
+    {
+        FlxG.sound.play(Paths.sound('scrollMenu'));
+
+        if (curMenu == "main"){
+            curSelected -= 1;
+            if (curSelected < 0){
+                curSelected = 4;
+            }
+        }
+        if (curMenu == "freeplay"){
+            curSelectedFreeplay -= 1;
+            if (curSelectedFreeplay < 0){
+                curSelectedFreeplay = 3;
+            }
+        }
+
+        updateOption();
+    }
+
+    if (FlxG.keys.justPressed.DOWN || FlxG.keys.justPressed.S)
+    {
+        FlxG.sound.play(Paths.sound('scrollMenu'));
+
+        if (curMenu == "main"){
+            curSelected += 1;
+            if (curSelected >=5){
+                curSelected = 0;
+            }
+        }
+        if (curMenu == "freeplay"){
+            curSelectedFreeplay += 1;
+            if (curSelectedFreeplay >=4){
+                curSelectedFreeplay = 0;
+            }
+        }
+
+        updateOption();
+    }
+
+    if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D)
+    {
+        if (curMenu == "extras"){
+            FlxG.sound.play(Paths.sound('scrollMenu'));
+            curSelectedExtra += 1;
+            if (curSelectedExtra > 1){
+                curSelectedExtra = 0;
+            }
+            updateOption();
+        }
+
+        if (curMenu == "freeplay"){
+            FlxG.sound.play(Paths.sound('scrollMenu'));
+            curDiff += 1;
+            if (curDiff > 2){
+                curDiff = 0;
+            }
+            if (diffSelectRightTween != null){
+                diffSelectRightTween.cancel();
+            }
+            diffSelectR.alpha = 1;
+            diffSelectRightTween = FlxTween.tween(diffSelectR,  {alpha: 0.2}, 1.0, {ease: FlxEase.sineOut});
+
+            updateDifficulty();
+        }
+    }
+
+    if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A)
+        {
+            if (curMenu == "extras"){
+                FlxG.sound.play(Paths.sound('scrollMenu'));
+                curSelectedExtra -= 1;
+                if (curSelectedExtra < 0){
+                    curSelectedExtra = 1;
+                }
+                updateOption();
+            }
+
+            if (curMenu == "freeplay"){
+                FlxG.sound.play(Paths.sound('scrollMenu'));
+                curDiff -= 1;
+                if (curDiff < 0){
+                    curDiff = 2;
+                }
+
+                if (diffSelectLeftTween != null){
+                    diffSelectLeftTween.cancel();
+                }
+                diffSelectL.alpha = 1;
+                diffSelectLeftTween = FlxTween.tween(diffSelectL, {alpha: 0.2}, 1.0, {ease: FlxEase.sineOut});
+
+                updateDifficulty();
+            }
+        }
+
+    if (prevSelectedFreeplay != curSelectedFreeplay){
+        prevSelectedFreeplay = curSelectedFreeplay;
+        updateClock(curSelectedFreeplay);
+    }
+}
+
+function startStoryMode(){
+	if(initialTween != null)
+    	initialTween.cancel();
+
+    initialTween = FlxTween.tween(FlxG.camera, {zoom: 0.8}, 1.2, {ease: FlxEase.backIn, onComplete: storyTweenZoom});
+
+    FlxG.save.data.seenCutscene = false;
+
+    for(i in 0...6){
+        if (musicGroup.members[i].volume != 0){
+            musicGroup.members[i].fadeOut(1,0);
+        }
+    }
+
+    FlxG.sound.play(Paths.sound('water rush'));
+
+    new FlxTimer().start(0.75, function(tmr){
+        transition.alpha = 1;
+        transition.animation.play("idle", true);
+        //transition.play();
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.7, function(tmr){
+        blackCovering.alpha = 1;
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(5, function(tmr){
+		PlayState.isStoryMode = true;
+		PlayState.storyPlaylist = ["opening", "null-and-void", "chkdsk", "bloodlust", "access-denied"];
+		
+		PlayState.campaignScore = 0;
+		PlayState.campaignMisses = 0;
+		var substate = new HScriptSubstate("difficultySelector");
+		if(!substate.script.errored){
+			substate.script.set("settingStory", true);
+			substate.script.set("callback", (difficulty, modchartDifficulty)->{
+				PlayState.difficulty = difficulty;
+				PlayState.modchartDifficulty = modchartDifficulty;
+				PlayState.difficultyName = switch(curDiff){ // too lazy for an array
+					case 0: "safe";
+					case 1: "";
+					case 2: "";
+				}
+
+				Song.playSong(new SongMetadata(PlayState.storyPlaylist[0], 'null'), PlayState.difficultyName, PlayState.difficulty, true);
+			});
+			this.openSubState(substate);
+		}
+
+
+        tmr.destroy();
+    });
+    
+}
+
+function startIf(){
+	if(initialTween != null)
+    	initialTween.cancel();
+    initialTween = FlxTween.tween(FlxG.camera, {zoom: 0.8}, 1.2, {ease: FlxEase.backIn, onComplete: storyTweenZoom});
+
+    for(i in 0...6){
+        if (musicGroup.members[i].volume != 0){
+            musicGroup.members[i].fadeOut(1,0);
+        }
+    }
+
+    FlxG.sound.play(Paths.sound('confirmMenu'));
+
+    FlxG.sound.play(Paths.sound('water rush'));
+
+    new FlxTimer().start(0.75, function(tmr){
+        transition.alpha = 1;
+        //transition.play();
+        transition.animation.play("idle", true);
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.7, function(tmr2){
+        blackCovering.alpha = 1;
+        tmr2.destroy();
+    });
+
+    new FlxTimer().start(6, function(tmr3){
+        if (FlxG.save.data.seenIfNotice == true){
+            var state = new HScriptState("ifMenu");
+            MusicBeatState.switchState(state);
+        } else {
+            FlxG.save.data.seenIfNotice = true;
+            var state = new HScriptState("ifNotice");
+            MusicBeatState.switchState(state);
+        }
+        
+        tmr3.destroy();
+    });
+    
+}
+
+function startSidestory(){
+	if(initialTween != null)
+    	initialTween.cancel();
+    initialTween = FlxTween.tween(FlxG.camera, {zoom: 0.8}, 1.2, {ease: FlxEase.backIn, onComplete: storyTweenZoom});
+
+    for(i in 0...6){
+        if (musicGroup.members[i].volume != 0){
+            musicGroup.members[i].fadeOut(1,0);
+        }
+    }
+
+    FlxG.sound.play(Paths.sound('confirmMenu'));
+
+    FlxG.sound.play(Paths.sound('water rush'));
+
+    new FlxTimer().start(0.75, function(tmr){
+        transition.alpha = 1;
+        //transition.play();
+        transition.animation.play("idle", true);
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.7, function(tmr2){
+        blackCovering.alpha = 1;
+        tmr2.destroy();
+    });
+
+    new FlxTimer().start(6, function(tmr3){
+        if (FlxG.save.data.seenSidestoryNotice == true){
+            var state = new HScriptState("sidestoryMenu");
+            MusicBeatState.switchState(state);
+        } else {
+            FlxG.save.data.seenSidestoryNotice = true;
+            var state = new HScriptState("sidestoryNotice");
+            MusicBeatState.switchState(state);
+        }
+        
+        tmr3.destroy();
+    });
+    
+}
+
+function storyTweenZoom(tween:FlxTween)
+{
+    initialTween = FlxTween.tween(FlxG.camera, {zoom: 6}, 1.5);
+}
+
+
+function checkSelection(curSelect:Int){
+    if (initialTween != null){
+        initialTween.cancel();
+        initialTween.destroy();
+    }
+
+    canSelect = false;
+
+    switch (curSelect){
+        case 0:
+            startStoryMode();
+            curMenu = "main";
+        case 1:
+            enterFreeplay();
+            curMenu = "freeplay";
+            new FlxTimer().start(1, function(tmr){
+                canSelect = true;
+                tmr.destroy();
+            });
+        case 2:
+            enterSettings();
+            curMenu = "options";
+            new FlxTimer().start(1, function(tmr){
+                canSelect = true;
+                tmr.destroy();
+            });
+        case 3:
+            enterExtras();
+            curMenu = "extras";
+            new FlxTimer().start(1, function(tmr){
+                canSelect = true;
+                tmr.destroy();
+            });
+        case 4:
+            enterCredits();
+            curMenu = "credits";
+    }
+    updateMusic(curSelect);
+    FlxG.sound.play(Paths.sound('confirmMenu'));
+}
+
+function startSong(){
+    if (initialTween != null){
+        initialTween.cancel();
+        initialTween.destroy();
+    }
+
+    initialTween = FlxTween.tween(FlxG.camera, {zoom: 0.8}, 1.2, {ease: FlxEase.backIn, onComplete: storyTweenZoom});
+
+    for(i in 0...6){
+        if (musicGroup.members[i].volume != 0){
+            musicGroup.members[i].fadeOut(1,0);
+        }
+    }
+
+    FlxG.sound.play(Paths.sound('water rush'));
+
+    new FlxTimer().start(0.75, function(tmr){
+        transition.alpha = 1;
+        //transition.play();
+        transition.animation.play("idle", true);
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.7, function(tmr){
+        blackCovering.alpha = 1;
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.7, function(tmr){
+        blackCovering.alpha = 1;
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(2.4, function(tmr){
+		// Make sure no story mode code is running
+		PlayState.isStoryMode = false;
+		PlayState.storyPlaylist = [];
+		
+		PlayState.campaignScore = 0;
+		PlayState.campaignMisses = 0;
+		PlayState.difficulty = curDiff; // TODO: set difficulty to the proper selected one
+		
+		var chartId = switch(curDiff){ // too lazy for an array
+			case 0: "safe";
+			case 1: "";
+			case 2: "";
+		}
+
+        switch (curSelectedFreeplay){
+            case 0:
+                Song.playSong(new SongMetadata("null-and-void", 'null'), chartId, curDiff);
+            case 1:
+                Song.playSong(new SongMetadata("chkdsk", 'null'), chartId, curDiff);
+            case 2:
+                Song.playSong(new SongMetadata("bloodlust", 'null'), chartId, curDiff);
+            case 3:
+                Song.playSong(new SongMetadata("access-denied", 'null'), chartId, curDiff);
+        }
+        //destroyVid(transition);
+        tmr.destroy();
+    });
+}
+
+function backOut(){
+    canSelect = false;
+
+    new FlxTimer().start(1, function(tmr){
+        canSelect = true;
+        tmr.destroy();
+    });
+
+	if(curMenu != 'options'){
+        FlxG.sound.play(Paths.sound('cancelMenu'));
+    }
+
+    switch (curMenu){
+        case "freeplay":
+            leaveFreeplay();
+        case "options":
+            leaveSettings();
+        case "extras":
+            leaveExtras();
+        case "credits":
+
+        case "main":
+            //
+    }
+    updateMusic(0);
+    curMenu = "main";
+}
+
+function enterSettings(){
+    initialTween = FlxTween.tween(camFollowPos, {x: 951, y:1995}, 1, {ease: FlxEase.backIn});
+    maxBlur = 0.05;
+    blurAngle = 0;
+    FlxTween.num(0.0, maxBlur, 1, {ease: FlxEase.quadIn, onComplete: hideBlur}, function(hi){
+        blurAmount = hi;
+    });
+	new FlxTimer().start(1, function(tmr){
+		var optState = new OptionsSubstate(false, true);
+		optState.goBack = function(changedOptions:Array<String>)
+		{
+			optState.optionDesc.visible = false;
+
+			FlxTween.tween(optState.optionCamera, {
+				y: optState.optionCamera.y + 1280
+			}, 1, {ease: FlxEase.quadOut});
+			FlxTween.tween(optState.mainCamera, {
+				y: optState.mainCamera.y + 1280
+			}, 1, {ease: FlxEase.quadOut});
+
+			FlxG.mouse.visible = false;
+			new FlxTimer().start(1, function(t){
+
+				this.closeSubState();
+
+				for (camera in optState.camerasToRemove)
+					FlxG.cameras.remove(camera);
+
+				var cam:FlxCamera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
+
+				cameras = [cam];
+				
+				backOut();
+			});
+		};
+		this.openSubState(optState);
+/* 		FlxTween.tween(optState.mainCamera, {alpha: 1}, 1, {ease: FlxEase.quadOut});
+		optState.mainCamera.alpha = 0; */
+	});
+}
+
+function enterCredits(){
+    initialTween = FlxTween.tween(camFollowPos, {x: 951, y:1995}, 1, {ease: FlxEase.backIn});
+    maxBlur = 0.05;
+    blurAngle = 0;
+    FlxTween.num(0.0, maxBlur, 1, {ease: FlxEase.quadIn, onComplete: hideBlur}, function(hi){
+        blurAmount = hi;
+    });
+
+    new FlxTimer().start(1, function(tmr){
+        
+        var state = new HScriptState("creditsMenu");
+        MusicBeatState.switchState(state);
+
+        //var optState = new CreditsSubstate(false, true);
+        // optState.goBack = function(changedOptions:Array<String>)
+        // {
+        // 	optState.optionDesc.visible = false;
+
+        // 	FlxTween.tween(optState.optionCamera, {
+        // 		y: optState.optionCamera.y + 1280
+        // 	}, 1, {ease: FlxEase.quadOut});
+        // 	FlxTween.tween(optState.mainCamera, {
+        // 		y: optState.mainCamera.y + 1280
+        // 	}, 1, {ease: FlxEase.quadOut});
+
+        // 	FlxG.mouse.visible = false;
+        // 	new FlxTimer().start(1, function(t){
+
+        // 		this.closeSubState();
+
+        // 		for (camera in optState.camerasToRemove)
+        // 			FlxG.cameras.remove(camera);
+
+        // 		var cam:FlxCamera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
+
+        // 		cameras = [cam];
+                
+        // 		backOut();
+        // 	});
+        // };
+        trace("i ran!!!");
+        //this.openSubState(optState);
+/* 		FlxTween.tween(optState.mainCamera, {alpha: 1}, 1, {ease: FlxEase.quadOut});
+        optState.mainCamera.alpha = 0; */
+    });
+}
+
+function leaveSettings(){
+    initialTween = FlxTween.tween(camFollowPos, {x: 951, y: 570}, 4, {ease: FlxEase.backOut});
+}
+
+function enterFreeplay(){
+    new FlxTimer().start(0.75, function(tmr){
+        updateClock(curSelectedFreeplay);
+        tmr.destroy();
+    });
+    
+    maxBlur = 0.05;
+    blurAngle = 90;
+    initialTween = FlxTween.tween(camFollowPos, {x: 4800}, 0.6, {ease: FlxEase.circIn, onComplete: easierTweenRight});
+    FlxTween.num(0.0, maxBlur, 0.3, {ease: FlxEase.quadIn, onComplete: hideBlur}, function(hi){
+        blurAmount = hi;
+    });
+}
+
+function leaveFreeplay(){
+    maxBlur = 0.05;
+    blurAngle = 90;
+    
+    initialTween = FlxTween.tween(camFollowPos, {x: 1951}, 0.6, {ease: FlxEase.circIn, onComplete: easierTweenLeft});
+    FlxTween.num(0.0, maxBlur, 0.3, {ease: FlxEase.quadIn, onComplete: hideBlur}, function(hi){
+        blurAmount = hi;
+    });
+}
+
+function enterExtras(){
+    maxBlur = 0.1;
+    blurAngle = 90.0;
+    FlxTween.tween(blackFade,  {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(fullBlack,  {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(bfFloat,  {x:453, y: 313, alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(bfFloatRed,  {x:453, y: 313}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(bgRed, {alpha: 1}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(buildingRed, {angle: 0,alpha: 1}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(layer2, {angle: 15}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(chainRed, {angle: 170, alpha: 1}, 1.0, {ease: FlxEase.sineOut});
+
+    FlxTween.tween(selectedText.members[3], {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(optionBg.members[3], {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(optionText.members[1], {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(optionText.members[2], {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(optionText.members[0], {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(optionText.members[4], {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+
+    new FlxTimer().start(0.5, function(tmr){
+        updateOption();
+        tmr.destroy();
+    });
+
+    initialTween = FlxTween.tween(camFollowPos, {y: 1700}, 0.6, {ease: FlxEase.circIn, onComplete: easierTweenDown});
+
+    FlxTween.num(90.0, 0.0, 0.6, {ease: FlxEase.quadIn, onComplete: hideBlur}, function(hi){
+        blurAngle = hi;
+    });
+
+    FlxTween.num(0.0, maxBlur, 0.5, {ease: FlxEase.quadOut, onComplete: hideBlur}, function(hi){
+        blurAmount = hi;
+    });
+}
+
+function leaveExtras(){
+    maxBlur = 0.1;
+    blurAngle = 90.0;
+
+    FlxTween.tween(bfFloat,  {x:574, y:200}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(bfFloatRed, {x:574, y:200, alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(bgRed, {alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(buildingRed, {angle: -14,alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(layer2, {angle: 0}, 1.0, {ease: FlxEase.sineOut});
+    FlxTween.tween(chainRed, {angle: 144, alpha: 0}, 1.0, {ease: FlxEase.sineOut});
+
+    new FlxTimer().start(0.5, function(tmr){
+        ifSelected.alpha = 0;
+        ifBg.alpha = 0;
+        ifText.alpha = 0;
+        sidestoryBg.alpha = 0;
+        sidestorySelected.alpha = 0;
+        sidestoryText.alpha = 0;
+
+        FlxTween.tween(selectedText.members[3], {alpha: 1}, 0.5, {ease: FlxEase.sineOut});
+        FlxTween.tween(optionBg.members[3], {alpha: 0.2}, 0.5, {ease: FlxEase.sineOut});
+        FlxTween.tween(optionText.members[1], {alpha: 0.2}, 0.5, {ease: FlxEase.sineOut});
+        FlxTween.tween(optionText.members[2], {alpha: 0.2}, 0.5, {ease: FlxEase.sineOut});
+        FlxTween.tween(optionText.members[0], {alpha: 0.2}, 0.5, {ease: FlxEase.sineOut});
+        FlxTween.tween(optionText.members[4], {alpha: 0.2}, 0.5, {ease: FlxEase.sineOut});
+        tmr.destroy();
+    });
+
+    FlxTween.tween(camFollowPos, {y: 1700}, 0.6, {ease: FlxEase.circIn, onComplete: easierTweenUp});
+
+    FlxTween.num(90.0, 0.0, 0.6, {ease: FlxEase.quadIn, onComplete: hideBlur}, function(hi){
+        blurAngle = hi;
+    });
+
+    FlxTween.num(0.0, maxBlur, 0.5, {ease: FlxEase.quadOut, onComplete: hideBlur}, function(hi){
+        blurAmount = hi;
+    });
+}
+
+function hideBlur(tween:FlxTween)
+{
+    FlxTween.num(maxBlur, 0.0, 0.5, {ease: FlxEase.linear}, function(hi){
+        blurAmount = hi;
+    });
+}
+
+function allowSelection(){
+    updateOption();
+}
+
+function updateOption()
+{
+    if (curMenu == "extras"){
+        if (curSelectedExtra == 0){
+            ifBg.alpha = 0.2;
+            ifSelected.alpha = 1;
+            ifText.alpha =  0;
+    
+            sidestoryBg.alpha = 0;
+            sidestorySelected.alpha = 0;
+            sidestoryText.alpha = 0.2;
+        } else {
+            ifBg.alpha = 0;
+            ifSelected.alpha = 0;
+            ifText.alpha =  0.2;
+    
+            sidestoryBg.alpha = 0.2;
+            sidestorySelected.alpha = 1;
+            sidestoryText.alpha = 0;
+        }
+        return;
+    }
+
+    for (i in 0...4) {
+        if (i == curSelectedFreeplay){
+            freeplayText.members[i].alpha = 0;
+            freeplaySelectedText.members[i].alpha = 1;
+            freeplayBg.members[i].alpha = 0.2;
+
+            freeplaySelectedText.members[i].scale.set(1.2,1.2);
+            freeplayBg.members[i].scale.set(1.2,1.2);
+        } else{
+            freeplayText.members[i].alpha = 0.2;
+            freeplayBg.members[i].alpha = 0;
+            freeplaySelectedText.members[i].alpha = 0;
+
+            freeplayText.members[i].scale.set(1.1,1.1);
+            freeplayBg.members[i].scale.set(1.1,1.1);
+        }
+    }
+
+    for (i in 0...5) {
+        if (i == curSelected){
+            optionText.members[i].alpha = 0;
+            selectedText.members[i].alpha = 1;
+            optionBg.members[i].alpha = 0.2;
+
+            selectedText.members[i].scale.set(0.8,0.8);
+            optionBg.members[i].scale.set(0.8,0.8);
+        } else{
+            optionText.members[i].alpha = 0.2;
+            optionBg.members[i].alpha = 0;
+            selectedText.members[i].alpha = 0;
+
+            optionText.members[i].scale.set(0.75,0.75);
+            optionBg.members[i].scale.set(0.75,0.75);
+        }
+    }
+}
+
+function updateDifficulty()
+{
+    if (diffTween != null){
+        diffTween.cancel();
+    }
+    for (i in 0...3) {
+        if (i == curDiff){
+            difficulties.members[i].alpha = 1;
+            diffTween = FlxTween.tween(difficulties.members[i],  {alpha: 0.2}, 4.0, {ease: FlxEase.sineOut});
+        } else{
+            difficulties.members[i].alpha = 0;
+        }
+    }
+}
+
+//  i want to believe nothing down here exists
+
+
+// sry for this, its 3am and im ded
+// im randomizing the target so it has a cooler visual effect
+function updateClock(which:Int)
+{
+    switch (which){
+        case 0:
+            values[0].desired = 2;
+            values[0].target = 6;
+            values[1].desired = 3;
+            values[1].target = 5;
+            values[2].desired = 5;
+            values[2].target = 9;
+            values[3].desired = 9;
+            values[3].target = 0;
+            values[4].desired = 0;
+            values[4].target = 4;
+            values[5].desired = 9;
+            values[5].target = 5;
+        case 1:
+            values[0].desired = 0;
+            values[0].target = 5;
+            values[1].desired = 0;
+            values[1].target = 3;
+            values[2].desired = 0;
+            values[2].target = 4;
+            values[3].desired = 2;
+            values[3].target = 9;
+            values[4].desired = 1;
+            values[4].target = 4;
+            values[5].desired = 0;
+            values[5].target = 5;
+        case 2:
+            values[0].desired = 0;
+            values[0].target = 4;
+            values[1].desired = 0;
+            values[1].target = 5;
+            values[2].desired = 0;
+            values[2].target = 4;
+            values[3].desired = 8;
+            values[3].target = 0;
+            values[4].desired = 1;
+            values[4].target = 4;
+            values[5].desired = 0;
+            values[5].target = 4;
+        case 3:
+            values[0].desired = 0;
+            values[0].target = 3;
+            values[1].desired = 0;
+            values[1].target = 3;
+            values[2].desired = 0;
+            values[2].target = 4;
+            values[3].desired = 7;
+            values[3].target = 0;
+            values[4].desired = 1;
+            values[4].target = 4;
+            values[5].desired = 0;
+            values[5].target = 3;
+    }
+}
+    
+
+function addFreeplayText(){
+    freeplayBg = new FlxSpriteGroup();
+    add(freeplayBg);
+
+    freeplayText = new FlxSpriteGroup();
+    add(freeplayText);
+
+    freeplaySelectedText = new FlxSpriteGroup();
+    add(freeplaySelectedText);
+
+    difficulties = new FlxSpriteGroup();
+    add(difficulties);
+
+    for (i in 0...4) {
+        var textBg = new FlxSprite(1030,-190);
+		textBg.frames = Paths.getSparrowAtlas("menus/freeplay/freeplayButtons");
+		textBg.animation.addByPrefix("idle", "s" + i, 0, true);
+		textBg.animation.play("idle", true);
+        textBg.scrollFactor.set(1,1);
+        textBg.scale.set(1.2,1.2);
+        textBg.alpha = 0;
+        textBg.blend = 0;
+        freeplayBg.add(textBg);
+    
+        var textOpt = new FlxSprite(1030,-190);
+		textOpt.frames = Paths.getSparrowAtlas("menus/freeplay/freeplayButtons");
+		textOpt.animation.addByPrefix("idle", "t" + i, 0, true);
+		textOpt.animation.play("idle", true);
+        textOpt.scrollFactor.set(1,1);
+        textOpt.scale.set(1.2,1.2);
+        textOpt.alpha = 0;
+        freeplayText.add(textOpt);
+
+        var textSel = new FlxSprite(1030,-190);
+		textSel.frames = Paths.getSparrowAtlas("menus/freeplay/freeplayButtons");
+		textSel.animation.addByPrefix("idle", "b" + i, 0, true);
+		textSel.animation.play("idle", true);
+        textSel.scrollFactor.set(1,1);
+        textSel.scale.set(1.2,1.2);
+        textSel.alpha = 0;
+        freeplaySelectedText.add(textSel);
+    }
+
+    for (i in 0...3) {
+        var textDiff = new FlxSprite(0,0, Paths.image('menus/freeplay/d'+i));
+        textDiff.scrollFactor.set(1,1);
+        textDiff.scale.set(1,1);
+        textDiff.alpha = 0;
+        //textDiff.blend = 0;
+        difficulties.add(textDiff);
+    }
+
+    diffSelectL = new FlxSprite(4660,150, Paths.image('menus/freeplay/dSelectLeft'));
+    diffSelectL.scrollFactor.set(1,1);
+    diffSelectL.scale.set(1,1);
+    diffSelectL.alpha = 0.2;
+    //diffSelectL.blend = 0;
+    add(diffSelectL);
+
+    diffSelectR = new FlxSprite(4660,150, Paths.image('menus/freeplay/dSelectRight'));
+    diffSelectR.scrollFactor.set(1,1);
+    diffSelectR.scale.set(1,1);
+    diffSelectR.alpha = 0.2;
+    //diffSelectR.blend = 0;
+    add(diffSelectR);
+
+    difficulties.setPosition(4660,150);
+
+    freeplaySelectedText.setPosition(3410,400);
+    freeplayText.setPosition(3410,400);
+    freeplayBg.setPosition(3410,400);
+
+    freeplaySelectedText.scale.set(1.2,1.2);
+    freeplayText.scale.set(1.2,1.2);
+    freeplayBg.scale.set(1.2,1.2);
+
+    object = difficulties;
+}
+
+function addTextShit(){
+    optionBg = new FlxSpriteGroup();
+    add(optionBg);
+
+    optionText = new FlxSpriteGroup();
+    add(optionText);
+
+    selectedText = new FlxSpriteGroup();
+    add(selectedText);
+
+    optionText.scale.set(0.8,0.8);
+    optionText.setPosition(-60,40);
+
+    selectedText.scale.set(0.8,0.8);
+    selectedText.setPosition(-60,40);
+
+    optionBg.scale.set(0.8,0.8);
+    optionBg.setPosition(-60,40);
+
+    for (i in 0...5) {
+        var textBg = new FlxSprite(954,-156);
+		textBg.frames = Paths.getSparrowAtlas("menus/mainmenu/menuButtons");
+		textBg.animation.addByPrefix("idle", "b" + i, 0, true);
+		textBg.animation.play("idle");
+        textBg.scrollFactor.set(1,1);
+        textBg.scale.set(0.8,0.8);
+        textBg.alpha = 0;
+        textBg.blend = 0;
+        optionBg.add(textBg);
+    
+        var textOpt = new FlxSprite(954,-156);
+		textOpt.frames = Paths.getSparrowAtlas("menus/mainmenu/menuButtons");
+		textOpt.animation.addByPrefix("idle", "t" + i, 0, true);
+		textOpt.animation.play("idle");
+        textOpt.scrollFactor.set(1,1);
+        textOpt.scale.set(0.75,0.75);
+        textOpt.alpha = 0;
+        optionText.add(textOpt);
+
+        var textSel = new FlxSprite(954,-156);
+		textSel.frames = Paths.getSparrowAtlas("menus/mainmenu/menuButtons");
+		textSel.animation.addByPrefix("idle", "s" + i, 0, true);
+		textSel.animation.play("idle");
+        textSel.scrollFactor.set(1,1);
+        textSel.scale.set(0.8,0.8);
+        textSel.alpha = 0;
+        selectedText.add(textSel);
+    }
+
+}
+
+function revealMainMenuTexts(){
+    new FlxTimer().start(0.7, function(tmr){
+        
+        FlxTween.tween(selectedText.members[0], {alpha: 1}, 1.0, {ease: FlxEase.sineOut});
+        FlxTween.tween(optionBg.members[0], {alpha: 0.2}, 1.0, {ease: FlxEase.sineOut});
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(0.9, function(tmr){
+        
+        FlxTween.tween(optionText.members[1], {alpha: 0.2}, 1.0, {ease: FlxEase.sineOut});
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.1, function(tmr){
+        
+        FlxTween.tween(optionText.members[2], {alpha: 0.2}, 1.0, {ease: FlxEase.sineOut});
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.3, function(tmr){
+        
+        FlxTween.tween(optionText.members[3], {alpha: 0.2}, 1.0, {ease: FlxEase.sineOut});
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.5, function(tmr){
+        
+        FlxTween.tween(optionText.members[4], {alpha: 0.2}, 1.0, {ease: FlxEase.sineOut});
+        
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(2, function(tmr){
+        canSelect = true;
+        menuRevealed = true;
+        tmr.destroy();
+    });
+}
+
+function addExtraShit(){
+    bgRed = new FlxSprite(54,-336, Paths.image('menus/mainmenu/RedBg'));
+    add(bgRed);
+    bgRed.scrollFactor.set(0,0);
+    bgRed.scale.set(2,2);
+    bgRed.alpha = 0;
+
+    buildingRed = new FlxSprite(-36,-196, Paths.image('menus/mainmenu/RedBuildings'));
+    add(buildingRed);
+    buildingRed.scrollFactor.set(0,0.1);
+    buildingRed.scale.set(1.8,1.8);
+    buildingRed.alpha = 0;
+
+    chainRed = new FlxSprite(-276,-1116, Paths.image('menus/mainmenu/chainRed'));
+    add(chainRed);
+    chainRed.scrollFactor.set(0,0.3);
+    chainRed.scale.set(1.8,1.8);
+    chainRed.alpha = 0;
+    chainRed.angle = 144;
+
+    bfFloatRed = new FlxSprite();
+    bfFloatRed.frames = Paths.getSparrowAtlas('menus/mainmenu/floatingBfRed');
+    bfFloatRed.animation.addByPrefix("idle", 'BfFloat', 24, true);
+    bfFloatRed.animation.play("idle", true);
+    bfFloatRed.scrollFactor.set(1, 1);
+    bfFloatRed.scale.set(1,1);
+    bfFloatRed.angle = 180;
+    bfFloatRed.antialiasing = true;
+    bfFloatRed.setPosition(574,210);
+    add(bfFloatRed);
+    bfFloatRed.alpha = 0;
+
+    ifBg = new FlxSprite(-307,503, Paths.image('menus/title/ifBg'));
+    ifBg.scrollFactor.set(1,1);
+    ifBg.scale.set(1,1);
+    ifBg.alpha = 0;
+    add(ifBg);
+
+    ifText = new FlxSprite(-300,503-10, Paths.image('menus/title/ifText'));
+    ifText.scrollFactor.set(1,1);
+    ifText.scale.set(0.9,0.9);
+    ifText.alpha = 0;
+    add(ifText);
+
+    ifSelected = new FlxSprite(-307,503, Paths.image('menus/title/ifSelected'));
+    add(ifSelected);
+    ifSelected.scrollFactor.set(1,1);
+    ifSelected.scale.set(1,1);
+    ifSelected.alpha = 0;
+
+    sidestoryBg = new FlxSprite(883,504, Paths.image('menus/title/sidestoryBg'));
+    sidestoryBg.scrollFactor.set(1,1);
+    sidestoryBg.scale.set(0.9,0.9);
+    sidestoryBg.alpha = 0;
+    add(sidestoryBg);
+
+    sidestoryText = new FlxSprite(890,504-10, Paths.image('menus/title/sidestoryText'));
+    sidestoryText.scrollFactor.set(1,1);
+    sidestoryText.scale.set(0.8,0.8);
+    sidestoryText.alpha = 0;
+    add(sidestoryText);
+
+    sidestorySelected = new FlxSprite(883,504, Paths.image('menus/title/sidestorySelected'));
+    sidestorySelected.scrollFactor.set(1,1);
+    sidestorySelected.scale.set(0.9,0.9);
+    sidestorySelected.alpha = 0;
+    add(sidestorySelected);
+}
+
+function addMiddleShit(){
+    var layer1 = new FlxSprite(-536,-806, Paths.image('menus/mainmenu/layer1'));
+    middle.add(layer1);
+    layer1.scrollFactor.set(0,0);
+
+    layer2 = new FlxSprite(-387,-230, Paths.image('menus/mainmenu/layer2'));
+    middle.add(layer2);
+    layer2.scrollFactor.set(0.6,0.1);
+
+    var layer3 = new FlxSprite(119,-90, Paths.image('menus/mainmenu/layer3'));
+    layer3.scale.set(1.3,1.3);
+    middle.add(layer3);
+    layer3.scrollFactor.set(0.6,0.15);
+
+    var layer4 = new FlxSprite(-202.3, -575.35, Paths.image('menus/mainmenu/layer4'));
+    middle.add(layer4);
+    layer4.scrollFactor.set(0.7,0.3);
+    layer4.alpha = 0.5;
+   
+    bfFloat = new FlxSprite();
+    bfFloat.frames = Paths.getSparrowAtlas('menus/mainmenu/floatingBf');
+    bfFloat.animation.addByPrefix("idle", 'BfFloat', 24, true);
+    bfFloat.animation.play("idle", true);
+    bfFloat.scrollFactor.set(1, 1);
+    bfFloat.scale.set(1,1);
+    bfFloat.antialiasing = true;
+    bfFloat.setPosition(574,200);
+    middle.add(bfFloat);
+
+    var layer5 = new FlxSprite(-132,-651, Paths.image('menus/mainmenu/layer5'));
+    middle.add(layer5);
+    layer5.scrollFactor.set(1.3,2);
+    layer5.scale.set(1,1.5);
+
+    var lightRays = new FlxSprite();
+    lightRays.frames = Paths.getSparrowAtlas('menus/mainmenu/lightRays');
+    lightRays.animation.addByPrefix("idle", 'LightRays', 8, true);
+    lightRays.animation.play("idle", true);
+    
+    lightRays.scale.set(1.5,1.5);
+    lightRays.antialiasing = true;
+    lightRays.setPosition(-106,-360);
+    middle.add(lightRays);
+    lightRays.scrollFactor.set(1, 0);
+
+    var lightRays2 = new FlxSprite(); // double it up
+    lightRays2.frames = Paths.getSparrowAtlas('menus/mainmenu/lightRays');
+    lightRays2.animation.addByPrefix("idle", 'LightRays', 8, true);
+    lightRays2.animation.play("idle", true);
+    lightRays2.scale.set(1.5,1.5);
+    lightRays2.antialiasing = true;
+    lightRays2.setPosition(-106,-160);
+    middle.add(lightRays2);
+    lightRays2.scrollFactor.set(1, 0);
+
+    blackFade = new FlxSprite(-6,484, Paths.image('menus/mainmenu/blackFade'));
+    add(blackFade);
+    blackFade.scrollFactor.set(0,1);
+    blackFade.scale.set(1.3,1.3);
+
+    fullBlack = new FlxSprite(-6,1841, Paths.image('menus/mainmenu/fullBlack'));
+    add(fullBlack);
+    fullBlack.scrollFactor.set(0,1);
+    fullBlack.scale.set(1.3,2);
+}
+
+function addRightShit(){
+    var right1 = new FlxSprite(-366,-467, Paths.image('menus/mainmenu/right1'));
+    right1.scale.set(2,2);
+    right.add(right1);
+    right1.scrollFactor.set(0, 0);
+
+    var right3 = new FlxSprite(2764 - 2510, -97, Paths.image('menus/mainmenu/right3'));
+    right3.scale.set(2,2);
+    right.add(right3);
+    right3.scrollFactor.set(0.4,0.1);
+
+    var right4 = new FlxSprite(-208,223, Paths.image('menus/mainmenu/right4'));
+    right4.scale.set(2,2);
+    right.add(right4);
+    right4.scrollFactor.set(0.6,0.3);
+
+    var right2 = new FlxSprite(1294,203, Paths.image('menus/mainmenu/right2'));
+    right2.scale.set(2,2);
+    right.add(right2);
+    right2.scrollFactor.set(0.6,0.3);
+
+    var right5 = new FlxSprite();
+    right5.frames = Paths.getSparrowAtlas('menus/mainmenu/right5');
+    right5.animation.addByPrefix("idle", 'layer5', 6, true);
+    right5.animation.play("idle", true);
+    right5.scrollFactor.set(1, 1);
+    right5.scale.set(1,1);
+    right5.antialiasing = true;
+    right5.setPosition(424+4220- 2510,610);
+    right.add(right5);
+
+    var right6 = new FlxSprite(1162+1710,503, Paths.image('menus/mainmenu/right6'));
+    right6.scale.set(2,2);
+    right.add(right6);
+
+    var jan = new FlxSprite(5630,538, Paths.image('menus/mainmenu/jan'));
+    jan.scrollFactor.set(1, 1);
+    jan.scale.set(1,1);
+    jan.antialiasing = true;
+    add(jan);
+
+    num1 = new FlxSprite();
+    num1.frames = Paths.getSparrowAtlas('menus/mainmenu/num1');
+    num1.scrollFactor.set(1, 1);
+    num1.scale.set(1,1);
+    num1.antialiasing = true;
+    num1.setPosition(1017+1710,541);
+    right.add(num1);
+
+    num2 = new FlxSprite();
+    num2.frames = Paths.getSparrowAtlas('menus/mainmenu/num2');
+    num2.scrollFactor.set(1, 1);
+    num2.scale.set(1,1);
+    num2.antialiasing = true;
+    num2.setPosition(1097+1710,524);
+    right.add(num2);
+
+    num3 = new FlxSprite();
+    num3.frames = Paths.getSparrowAtlas('menus/mainmenu/num3');
+    num3.scrollFactor.set(1, 1);
+    num3.scale.set(1,1);
+    num3.antialiasing = true;
+    num3.setPosition(1224+1710,506);
+    right.add(num3);
+
+    num4 = new FlxSprite();
+    num4.frames = Paths.getSparrowAtlas('menus/mainmenu/num4');
+    num4.scrollFactor.set(1, 1);
+    num4.scale.set(1,1);
+    num4.antialiasing = true;
+    num4.setPosition(1315+1710,490);
+    right.add(num4);
+
+    num5 = new FlxSprite();
+    num5.frames = Paths.getSparrowAtlas('menus/mainmenu/num5');
+    num5.scrollFactor.set(1, 1);
+    num5.scale.set(1,1);
+    num5.antialiasing = true;
+    num5.setPosition(1426+1710,477);
+    right.add(num5);
+
+    num6 = new FlxSprite();
+    num6.frames = Paths.getSparrowAtlas('menus/mainmenu/num6');
+    num6.scrollFactor.set(1, 1);
+    num6.scale.set(1,1);
+    num6.antialiasing = true;
+    num6.setPosition(1464+1710,473);
+    right.add(num6);
+
+    for (i in 0...10) {
+        num1.animation.addByPrefix(i, i+'first', 24, true);
+        num2.animation.addByPrefix(i, i+'second', 24, true);
+        num3.animation.addByPrefix(i, i+'third', 24, true);
+        num4.animation.addByPrefix(i, i+'fourth', 24, true);
+        num5.animation.addByPrefix(i, i+'fith', 24, true);
+        num6.animation.addByPrefix(i, i+'sixth', 24, true);
+    }
+
+    num1.animation.play("8", true);
+    num2.animation.play("8", true);
+    num3.animation.play("8", true);
+    num4.animation.play("8", true);
+    num5.animation.play("8", true);
+    num6.animation.play("8", true);
+
+    var clockTick = new FlxSprite();
+    clockTick.frames = Paths.getSparrowAtlas('menus/mainmenu/clockTick');
+    clockTick.animation.addByPrefix("idle", 'clockTick', 24, true);
+    clockTick.animation.play("idle", true);
+    clockTick.scrollFactor.set(1, 1);
+    clockTick.scale.set(1,1);
+    clockTick.antialiasing = true;
+    clockTick.setPosition(1199+1710,582);
+    right.add(clockTick);
+
+    var right6dark = new FlxSprite(1752+1710,603, Paths.image('menus/mainmenu/right6dark'));
+    right6dark.scale.set(2,2);
+    right6dark.blend = 9;
+    right.add(right6dark);
+
+    var right6light = new FlxSprite(1193+1710,591, Paths.image('menus/mainmenu/right6light'));
+    right6light.scale.set(2,2);
+    right6light.blend = 0;
+    right.add(right6light);
+
+    var rightRays = new FlxSprite();
+    rightRays.frames = Paths.getSparrowAtlas('menus/mainmenu/rightLightRays');
+    rightRays.animation.addByPrefix("idle", 'right2', 12, true);
+    rightRays.animation.play("idle", true);
+    rightRays.scrollFactor.set(0.6, 1);
+    rightRays.scale.set(1.2,1.2);
+    rightRays.antialiasing = true;
+    rightRays.setPosition(3814- 2510,-280);
+    right.add(rightRays);
+
+    var rightRays2 = new FlxSprite();
+    rightRays2.frames = Paths.getSparrowAtlas('menus/mainmenu/rightLightRays');
+    rightRays2.animation.addByPrefix("idle", 'right2', 12, true);
+    rightRays2.animation.play("idle", true);
+    rightRays2.scrollFactor.set(0.6, 1);
+    rightRays2.scale.set(1.2,1.4);
+    rightRays2.antialiasing = true;
+    rightRays2.setPosition(3414- 2510,-280);
+    right.add(rightRays2);
+    rightRays2.alpha = 0.4;
+
+    var layer5 = new FlxSprite(3078 - 2510,-1751, Paths.image('menus/mainmenu/layer5'));
+    right.add(layer5);
+    layer5.scrollFactor.set(1.3,2);
+    layer5.scale.set(1,1.5);
+}
+
+function playBubbleAnimation(){
+    var bubbles = new FlxSprite();
+    bubbles.frames = Paths.getSparrowAtlas('menus/mainmenu/bubbles');
+    bubbles.animation.addByPrefix("idle", 'Symbol 29', 24, false);
+    bubbles.animation.play("idle", true);
+    bubbles.scrollFactor.set(1, 1);
+    bubbles.scale.set(0.7,0.7);
+    bubbles.antialiasing = true;
+    bubbles.setPosition(94,-150);
+    bubbles.alpha = 0.8;
+    add(bubbles);
+    FlxTween.tween(bubbles,  {alpha: 0.2}, 15.0, {ease: FlxEase.sineInOut});
+
+    var bubbles2 = new FlxSprite();
+    bubbles2.frames = Paths.getSparrowAtlas('menus/mainmenu/bubbles');
+    bubbles2.animation.addByPrefix("idle", 'Symbol 29', 24, false);
+    bubbles2.animation.play("idle", true);
+    bubbles2.scrollFactor.set(1, 1);
+    bubbles2.scale.set(0.9,0.9);
+    bubbles2.antialiasing = true;
+    bubbles2.setPosition(1414,-350);
+    bubbles2.alpha = 0.8;
+    add(bubbles2);
+    FlxTween.tween(bubbles2,  {alpha: 0.2}, 15.0, {ease: FlxEase.sineInOut});
+
+    new FlxTimer().start(4, function(tmr2){
+        bubbles.alpha = 0;
+        bubbles2.alpha = 0;
+        bubbles.x = 2000;
+        bubbles2.x = 2000;
+        bubbles.destroy();
+        bubbles2.destroy();
+        tmr2.destroy();
+    });
+}
+
+function addShaderShit(){
+    water = Paths.getShader("waves");
+    lens = Paths.getShader("lens");
+    blur = Paths.getShader("blur");
+    FlxG.camera.setFilters([new ShaderFilter(water), new ShaderFilter(lens),new ShaderFilter(blur)]);
+    water.data.iTime.value = [0.0];
+    blur.data.iTime.value = [0.0];
+    lens.data.iTime.value = [0.0];
+    lens.data.ushaderStrength.value = [0.0];
+    blurAngle = 90.0;
+}

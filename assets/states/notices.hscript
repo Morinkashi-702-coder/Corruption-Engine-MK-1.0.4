@@ -1,0 +1,277 @@
+var camFollow;
+var camFollowPos;
+var object;
+var canSelect = true;
+var canMove = false;
+
+var textTween;
+var alphaTween;
+
+// notice shit
+var moveTween;
+var curInfo = 0;
+var infoCard;
+
+var curSelected = 1;
+var chains;
+
+var thankYou;
+var thumb;
+var takesPlace;
+var takeMe;
+var ignore;
+
+function onStateCreate() {
+    trace("Start onStateCreate");
+    persistentUpdate = true;
+    persistentDraw = true;
+
+    MusicBeatState.stopMenuMusic();
+    trace("Stopped music");
+
+    FadeTransitionSubstate.nextCamera = FlxG.camera;
+    trace("Set nextCamera");
+
+    Paths.pushGlobalContent();
+    Paths.loadTheFirstEnabledMod();
+    FlxG.mouse.visible = false;
+    FlxG.camera.bgColor = 0xFF222222;
+    trace("Set camera bg");
+
+    camFollow = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
+    trace("camFollow created");
+    camFollow.alpha = 0;
+    camFollow.setPosition(951,570);
+    camFollowPos = new FlxObject(951,-270, 1, 1);
+    trace("camFollowPos created");
+    add(camFollow);
+    add(camFollowPos);
+    trace("Added camFollow and camFollowPos");
+
+FlxG.camera.zoom = 1;
+    FlxG.camera.follow(camFollowPos, null, 1);
+    trace("Camera follow set");
+
+
+    chains = new FlxSprite(-370,-120, Paths.image('chains'));
+    trace("chains sprite creado");
+    chains.scrollFactor.set(0,0);
+    chains.scale.set(1.7,1.7);
+    chains.alpha = 0.4;
+    add(chains);
+    trace("chains agregado");
+
+    nextCard();
+
+    thankYou = new FlxSprite(0,0, Paths.image('thankYou'));
+    trace("thankYou sprite creado");
+    thankYou.scrollFactor.set(0,0);
+    thankYou.scale.set(1.7,1.7);
+    thankYou.alpha = 0;
+    add(thankYou);
+    trace("thankYou agregado");
+
+    ignore = new FlxSprite(0,0, Paths.image('ignore'));
+    ignore.scrollFactor.set(0,0);
+    ignore.scale.set(1.65,1.65);
+    ignore.alpha = 0;
+    add(ignore);
+
+    takeMe = new FlxSprite(0,0, Paths.image('takeMe'));
+    takeMe.scrollFactor.set(0,0);
+    takeMe.scale.set(1.65,1.65);
+    takeMe.alpha = 0;
+    add(takeMe);
+
+    takesPlace = new FlxSprite(0,0, Paths.image('takesPlace'));
+    takesPlace.scrollFactor.set(0,0);
+    takesPlace.scale.set(1.7,1.7);
+    takesPlace.alpha = 0;
+    add(takesPlace);
+
+    thumb = new FlxSprite(0,0, Paths.image('thumb'));
+    thumb.scrollFactor.set(0,0);
+    thumb.scale.set(1.7,1.7);
+    thumb.alpha = 0;
+    add(thumb);
+
+    object = thankYou;
+}
+
+function onStateCreatePost(){
+    
+}
+
+
+function onUpdate(elapsed){
+    inputShit();
+}
+
+
+function inputShit(){
+    if (!canSelect){return;}
+
+    if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER|| FlxG.keys.justPressed.Z){
+        canSelect = false;
+        FlxG.sound.play(Paths.sound('confirmMenu'));
+        
+        if (curInfo == 5){
+            if (curSelected == 1){
+                hideThumb();
+            }
+            else {
+                CoolUtil.browserLoad('https://youtu.be/kXgwi83JTXE?si=k4trGmz-052tfLZ8');
+                canSelect = true;
+            }
+        } else if (curInfo == 6){
+            hideThankYou();
+        } else {
+            removeInfoCard();
+        }
+    }
+
+    if (!canMove){return;}
+
+    if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D)
+    {
+        FlxG.sound.play(Paths.sound('scrollMenu'));
+        curSelected += 1;
+        if (curSelected > 1){
+            curSelected = 0;
+        }
+        updateOption();
+    }
+
+    if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A)
+    {
+        FlxG.sound.play(Paths.sound('scrollMenu'));
+        curSelected -= 1;
+        if (curSelected < 0){
+            curSelected = 1;
+        }
+        updateOption();
+    }
+}
+
+function updateOption() {
+    if (curSelected == 0){
+        takeMe.alpha = 1;
+        takeMe.scale.set(1.7,1.7);
+
+        ignore.alpha = 0.4;
+        ignore.scale.set(1.65,1.65);
+    } else {
+        ignore.alpha = 1;
+        ignore.scale.set(1.7,1.7);
+
+        takeMe.alpha = 0.4;
+        takeMe.scale.set(1.65,1.65);
+    }
+}
+
+function createInfoCard(infoText, subInfoText) {
+    trace("createInfoCard: " + infoText + " / " + subInfoText);
+    if (infoCard != null){
+        remove(infoCard);
+    }
+
+    infoCard = new FlxSpriteGroup();
+    add(infoCard, true); // <-- el true lo pone arriba de todo
+
+    // Fondo visible
+    var infoSprite = new FlxSprite(0, 0).makeGraphic(800, 400, 0xFF444444);
+    infoSprite.scrollFactor.set(0,0);
+    infoSprite.alpha = 1;
+    infoCard.add(infoSprite);
+
+    // Texto principal grande y blanco
+    var mainText = new FlxText(0, 50, 800, infoText, 48);
+    mainText.setFormat(null, 48, 0xFFFFFFFF, "center");
+    mainText.alpha = 1;
+    infoCard.add(mainText);
+
+    // Subtexto grande y rojo
+    var subText = new FlxText(0, 200, 800, subInfoText, 36);
+    subText.setFormat(null, 36, 0xFFCC5363, "center");
+    subText.alpha = 1;
+    infoCard.add(subText);
+
+    // Centra el grupo en pantalla
+    infoCard.x = (FlxG.width - 800) / 2;
+    infoCard.y = (FlxG.height - 400) / 2;
+    infoCard.alpha = 1;
+
+    trace("infoCard creado y añadido");
+}
+
+function removeInfoCard(){
+    if (moveTween != null){
+        moveTween.cancel();
+    }
+
+    if (textTween != null){
+        textTween.cancel();
+    }
+
+    moveTween = FlxTween.tween(infoCard, {x: 1710,alpha: 0}, 0.2, {ease: FlxEase.sineOut, onComplete: nextCard});
+}
+
+function nextCard(){
+    trace("nextCard, curInfo: " + curInfo);
+    createInfoCard("¡Hola!", "Esto es una tarjeta de prueba.");
+}
+
+function showThankYou(){
+    if (alphaTween != null){
+        alphaTween.cancel();
+    }
+
+    new FlxTimer().start(2, function(tmr){
+        if (canSelect){
+            hideThankYou();
+        }
+        tmr.destroy();
+    });
+    
+    
+    alphaTween = FlxTween.tween(thankYou,  {alpha: 1}, 1, {ease: FlxEase.sineInOut});
+}
+
+function hideThankYou(){
+    alphaTween = FlxTween.tween(thankYou,  {alpha: 0}, 1, {ease: FlxEase.sineInOut, onComplete: leaveScene});
+}
+
+function leaveScene(){
+    var state = new HScriptState("softCodeMenu");
+	state.stateScript.set("showTitle", true);
+    MusicBeatState.switchState(state);
+}
+
+function showThumb(){
+    if (alphaTween != null){
+        alphaTween.cancel();
+    }
+
+    new FlxTimer().start(1, function(tmr){
+        canMove = true;
+        updateOption();
+        tmr.destroy();
+    });
+   
+    alphaTween = FlxTween.tween(takesPlace,  {alpha: 1}, 1, {ease: FlxEase.sineInOut});
+    FlxTween.tween(thumb,  {alpha: 1}, 1, {ease: FlxEase.sineInOut});
+    FlxTween.tween(takeMe,  {alpha: 0.4}, 0.4, {ease: FlxEase.sineInOut});
+    FlxTween.tween(ignore,  {alpha: 0.4}, 0.5, {ease: FlxEase.sineInOut});
+}
+
+function hideThumb(){
+    canMove = false;
+    if (alphaTween != null){
+        alphaTween.cancel();
+    }
+    FlxTween.tween(chains,  {alpha: 0}, 4, {ease: FlxEase.sineInOut});
+    alphaTween = FlxTween.tween(takesPlace,  {alpha: 0}, 1, {ease: FlxEase.sineInOut, onComplete: nextCard});
+    FlxTween.tween(thumb,  {alpha: 0}, 1, {ease: FlxEase.sineInOut});
+    FlxTween.tween(takeMe,  {alpha: 0}, 1, {ease: FlxEase.sineInOut});
+    FlxTween.tween(ignore,  {alpha: 0}, 1, {ease: FlxEase.sineInOut});
+}

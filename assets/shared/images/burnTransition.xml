@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="burnTransition.png">
+<SubTexture name="burnTransition idle0000" x="0" y="0" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0001" x="800" y="0" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0002" x="0" y="450" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0003" x="800" y="450" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0004" x="0" y="900" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0005" x="800" y="900" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0006" x="1600" y="0" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0007" x="1600" y="450" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0008" x="1600" y="900" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0009" x="0" y="1350" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0010" x="800" y="1350" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0011" x="1600" y="1350" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0012" x="0" y="1800" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0013" x="800" y="1800" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0014" x="1600" y="1800" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0015" x="2400" y="0" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0016" x="2400" y="450" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0017" x="2400" y="900" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0018" x="2400" y="1350" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0019" x="2400" y="1800" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0020" x="0" y="2250" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0021" x="800" y="2250" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0022" x="1600" y="2250" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0023" x="1600" y="2250" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0024" x="1600" y="2250" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+<SubTexture name="burnTransition idle0025" x="1600" y="2250" width="800" height="450" frameX="0" frameY="0" frameWidth="800" frameHeight="450" />
+</TextureAtlas>

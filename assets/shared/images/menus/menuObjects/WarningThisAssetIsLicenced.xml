@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="a.png">
+	<!-- Created with Adobe Animate version 18.0.2.126 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="a0000" x="0" y="0" width="1687" height="922" pivotX="844" pivotY="513"/>
+	<SubTexture name="a0001" x="0" y="0" width="1687" height="922"/>
+	<SubTexture name="a0002" x="1687" y="0" width="1687" height="922"/>
+	<SubTexture name="a0003" x="1687" y="0" width="1687" height="922"/>
+	<SubTexture name="a0004" x="0" y="922" width="1687" height="922"/>
+	<SubTexture name="a0005" x="0" y="922" width="1687" height="922"/>
+	<SubTexture name="a0006" x="1687" y="922" width="1687" height="922"/>
+	<SubTexture name="a0007" x="1687" y="922" width="1687" height="922"/>
+	<SubTexture name="a0008" x="0" y="1844" width="1687" height="922"/>
+	<SubTexture name="a0009" x="0" y="1844" width="1687" height="922"/>
+	<SubTexture name="a0010" x="1687" y="1844" width="1687" height="922"/>
+	<SubTexture name="a0011" x="1687" y="1844" width="1687" height="922"/>
+</TextureAtlas>

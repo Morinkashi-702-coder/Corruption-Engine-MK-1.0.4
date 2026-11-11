@@ -1,0 +1,86 @@
+// Hi, Nebula here!
+// Thisd lil doohickey script controls playing skippable video cutscenes at the start and end of every song!
+// The old system was kinda hodge-podged together, so hopefully this system will allow for things to be a bit better and more streamlined!
+
+// This is split into 2 parts, this script, which deals with actually playing the cutscene and all the logic behind that (skipping, etc)
+// And the cutscene player script, which deals with finding cutscenes and telling this substate to play them!
+
+
+
+onCutsceneFinished = () -> {
+	trace("no cutscene finish definition whoops!");
+} // So the game doesnt crash if a script doesnt set this callback
+
+cutscenePath = "HelpMe"; // HELP ME!
+
+
+var DO_SKIP_TIME:Float = 1;
+
+var cutsceneVideo:MP4Sprite;
+
+var skipWheel:FlxSprite;
+var skipTime:Float = 0;
+var lastSkip:Float = 0;
+var cutsceneCamera:FlxCamera;
+
+function onUpdate(elapsed){
+	if(FlxG.keys.pressed.ENTER || FlxG.keys.pressed.SPACE || FlxG.keys.pressed.ESCAPE){
+		lastSkip = 0;
+		skipTime += elapsed;
+
+	}else if(skipTime > 0){
+		lastSkip += elapsed;
+		if(lastSkip >= 2)
+			skipTime -= elapsed * 2;
+		
+		if(skipTime < 0)
+			skipTime = 0;
+		
+	}
+	if(skipTime <= 0)
+		skipWheel.alpha = 0;
+	else{
+		skipWheel.shader.data.amount.value[0] = skipTime / DO_SKIP_TIME;
+		skipWheel.alpha = skipTime / 0.5;
+	}
+
+	if(skipTime >= DO_SKIP_TIME){
+		close();
+	}
+}
+
+function onClose(){
+	onCutsceneFinished();
+	cutsceneVideo.destroy();
+	FlxG.cameras.remove(cutsceneCamera, true);
+}
+
+function onStateCreate(){
+
+	cutsceneCamera = new FlxCamera();
+	FlxG.cameras.add(cutsceneCamera, false);
+
+	cutsceneVideo = new MP4Sprite();
+	cutsceneVideo.cameras = [cutsceneCamera];
+	cutsceneVideo.autoVolumeHandle = true;
+	cutsceneVideo.bitmap.onFormatSetup.add(function():Void
+    {
+		cutsceneVideo.updateHitbox();
+		cutsceneVideo.screenCenter();
+    });
+	add(cutsceneVideo);
+	cutsceneVideo.bitmap.onEndReached.add(close);
+	cutsceneVideo.load(Paths.video(cutscenePath));
+	cutsceneVideo.play();
+
+	skipWheel = new FlxSprite().makeGraphic(60, 60, FlxColor.WHITE);
+	skipWheel.shader = Paths.getShader('ring');
+	skipWheel.shader.data.amount.value = [1];
+	skipWheel.updateHitbox();
+	skipWheel.x = FlxG.width - skipWheel.width;
+	skipWheel.y = FlxG.height - skipWheel.height;
+	skipWheel.cameras = [cutsceneCamera];
+	skipWheel.flipY = true;
+
+	add(skipWheel);
+}

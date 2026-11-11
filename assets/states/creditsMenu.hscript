@@ -1,0 +1,504 @@
+
+
+var object:FlxSprite;
+
+// camera
+var camFollow:FlxSprite;
+var camFollowPos:FlxObject;
+
+var curArray:Array<{ name:String, info:String, link:String }>;
+var allArrays:Array<Array<{ name:String, info:String, link:String }>> = [];
+
+//var nullAndVoidCredits:Array<{ name:String, info:String, link:String }> = [];
+
+var curArrayText:FlxTypedGroup<FlxText>;
+var creditsText:FlxTypedGroup<FlxText>;
+
+var infoText:FlxText;
+
+var curSelected:Int = 0;
+var prevMenuCurSelected:Int = 0;
+var canSelect:Bool = false;
+
+var selectArrow:FlxSprite;
+var blackTop:FlxSprite;
+
+var infoTween:FlxTween;
+var blackTween:FlxTween; 
+
+var layer:String = "section";
+var returnToMainSection:Array<String> = ["animations","general","if","memory","extra"];
+var corrSongs:Array<String> = ["nullandvoid", "chkdsk", "bloodlust", "accessdenied"];
+
+var bg:FlxSprite;
+
+function onStateCreate(){
+    persistentUpdate = true;
+	persistentDraw = true;
+
+    FadeTransitionSubstate.nextCamera = FlxG.camera; // AAAA
+    
+    Paths.pushGlobalContent();
+    Paths.loadTheFirstEnabledMod();
+    FlxG.mouse.visible = false;
+    FlxG.camera.bgColor = FlxColor.BLACK;
+
+    camFollow = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
+    camFollow.alpha = 0;
+    camFollow.setPosition(951,570);
+    //FlxTween.tween(camFollowPos,  {x: camFollowPos.x + 1000}, 1.0, {ease: FlxEase.sineInOut, type: FlxTween.PINGPONG});
+    camFollowPos = new FlxObject(951,-270, 1, 1);
+    add(camFollow);
+    add(camFollowPos);
+
+    FlxG.camera.zoom = 0.593;
+    FlxG.camera.follow(camFollowPos, null, 1);
+
+    bg = new FlxSprite().loadGraphic(Paths.image("menus/sidestory/gradient"));
+    bg.scrollFactor.set();
+    bg.screenCenter();
+    add(bg);
+    bg.setPosition(571,-109);
+    bg.scale.set(0.8,2);
+    bg.alpha = 0;
+    bg.color = FlxColor.RED;
+    
+    FlxTween.tween(bg,  {alpha: 0.4}, 8.0, {ease: FlxEase.sineInOut, type: FlxTween.PINGPONG});
+
+    var chains = new FlxSprite().loadGraphic(Paths.image("menus/sidestory/chains"));
+    chains.scrollFactor.set();
+    chains.screenCenter();
+
+    chains.setPosition(561,120);
+    chains.scale.set(0.9,1.4);
+    add(chains);
+
+    addCreditsToArray();
+
+
+    FlxG.sound.playMusic(Paths.music('menu4'), 1);
+
+    curArray = allArrays[0];
+
+    blackTop = new FlxSprite(10,-20, Paths.image('menus/mainmenu/fullBlack'));
+
+    updateTexts();
+    updateSelected();
+
+    selectArrow = new FlxSprite(-40,-300, Paths.image('menus/credits/arrow'));
+    add(selectArrow);
+    selectArrow.scrollFactor.set(1,1);
+    selectArrow.scale.set(1,1);
+    selectArrow.antialiasing = true;
+
+
+    var arrowTrail = new FlxTrail(selectArrow, null, 4, 12, 0.3, 0.09);
+    add(arrowTrail);
+
+    add(blackTop);
+    blackTop.scrollFactor.set(0,0);
+    blackTop.scale.set(1.7,1.7);
+
+    object = infoText;
+
+    new FlxTimer().start(1, function(tmr){
+        canSelect = true;
+        tmr.destroy();
+    });
+}
+
+function updateTexts(){
+    var textOffsetY = 0;
+
+    if (creditsText != null){
+        remove(creditsText);
+    }
+
+    if (infoText != null){
+        remove(infoText);
+    }
+
+    creditsText = new FlxTypedGroup();
+    add(creditsText);
+
+    curArrayText = creditsText;
+
+    if (blackTween != null){
+        blackTween.cancel();
+    }
+
+    blackTop.alpha = 1;
+    blackTween = FlxTween.tween(blackTop,  {alpha: 0}, 1.0, {ease: FlxEase.sineIn});
+
+    for (i in 0...curArray.length) {
+        var name = new FlxText(80, -320 + textOffsetY, 1000, curArray[i].name, 25);
+        name.antialiasing = true;
+        name.setFormat(Paths.font("VollkornRegular-ZVJEZ.ttf"), 85, 0xFFFFFFFF, FlxTextAlign.LEFT);
+        creditsText.add(name);
+        name.scrollFactor.set(1,1);
+
+        textOffsetY += 190;
+    }
+
+    infoText = new FlxText(717,194, 1000, curArray[curSelected].info, 25);
+    infoText.antialiasing = true;
+    infoText.setFormat(Paths.font("VollkornRegular-ZVJEZ.ttf"), 65, 0xFFFFFFFF, FlxTextAlign.CENTER);
+    infoText.scrollFactor.set(0,0);
+    infoText.alpha = 0.5;
+    add(infoText);
+}
+
+function onUpdate(elapsed:Float){
+    inputShit();
+
+    var lerpVal:Float = Math.exp(-elapsed * 2.4 * 2);
+    camFollowPos.setPosition(
+        FlxMath.lerp(camFollow.x, camFollowPos.x, lerpVal),
+        FlxMath.lerp(camFollow.y + 100, camFollowPos.y, lerpVal)
+    );
+
+    camFollow.y = curArrayText.members[curSelected].y;
+    selectArrow.y = curArrayText.members[curSelected].y + 20;
+}
+
+function inputShit(){
+    if (!canSelect){return;}
+
+    if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER|| FlxG.keys.justPressed.Z){
+        
+        enter();
+    }
+
+    if (FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE|| FlxG.keys.justPressed.X){
+        backOut();
+    }
+
+    if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.W)
+    {
+        FlxG.sound.play(Paths.sound('scrollMenu'));
+        curSelected -= 1;
+        if (curSelected < 0){
+            curSelected = curArray.length-1;
+        }
+
+        updateSelected();
+    }
+
+    if (FlxG.keys.justPressed.DOWN || FlxG.keys.justPressed.S)
+    {
+        FlxG.sound.play(Paths.sound('scrollMenu'));
+        curSelected += 1;
+        if (curSelected >= curArray.length){
+            curSelected = 0;
+        }
+
+        updateSelected();
+    }
+}
+
+function enter(){
+    FlxG.sound.play(Paths.sound('confirmMenu'));
+    checkLayer();
+    
+}
+
+function backOut(){
+    // .contains doesnt seem to work in hscript :sobbing:
+    //if (returnToMainSection.contains(layer)){
+    //else if (corrSongs.contains(layer)){
+
+    FlxG.sound.play(Paths.sound('cancelMenu'));
+    if (layer == "corruption"||layer == "animations"||layer == "general"||layer == "if"||layer == "memory"||layer == "extra"){
+        changeLayer(0,"section");
+        curSelected = prevMenuCurSelected;
+        updateTexts();
+        updateSelected();
+        bg.color = FlxColor.RED;
+    }
+
+    else if (layer == "opening"|| layer == "badending"){
+        changeLayer(2,"animations");
+        curSelected = prevMenuCurSelected;
+        updateTexts();
+        updateSelected();
+        bg.color = 0xFF6677;
+    }
+
+    else if (layer == "nullandvoid"||layer == "chkdsk"||layer == "bloodlust"||layer == "accessdenied"){
+        changeLayer(1,"corruption");
+        curSelected = prevMenuCurSelected;
+        updateTexts();
+        updateSelected();
+        bg.color = 0xFF6677;
+    }
+
+    else {
+        // return to menu
+        canSelect = false;
+        if (blackTween != null){
+            blackTween.cancel();
+        }
+    
+        blackTop.alpha = 0;
+        blackTween = FlxTween.tween(blackTop,  {alpha: 1}, 1.0, {ease: FlxEase.sineOut});
+
+        new FlxTimer().start(1, function(t){
+
+            var state = new HScriptState("softCodeMenu");
+            MusicBeatState.switchState(state);
+        });
+    }
+}
+
+function checkLayer(){
+    if (layer == "section"){
+        switch (curSelected){
+            case 0:
+                changeLayer(1,"corruption");
+                bg.color = 0xFF6677;
+            case 1:
+                changeLayer(2,"animations");
+                bg.color = 0xFF6677;
+            case 2:
+                changeLayer(9,"general");
+                bg.color = 0xFFFFFF;
+            case 3:
+                changeLayer(8,"if");
+                bg.color = 0xFFFFFF;
+            case 4:
+                changeLayer(10,"memory");
+                bg.color = 0xFFFFFF;
+            case 5:
+                changeLayer(11,"extra");
+                bg.color = 0xFFFFFF;
+        }
+        prevMenuCurSelected = curSelected;
+        curSelected = 0;
+        updateTexts();
+        updateSelected();
+    }
+    else if (layer == "corruption"){
+        switch (curSelected){
+            case 0:
+                changeLayer(12,"nullandvoid");
+            case 1:
+                changeLayer(3,"chkdsk");
+            case 2:
+                changeLayer(4,"bloodlust");
+            case 3:
+                changeLayer(5,"accessdenied");
+        }
+        bg.color = 0xFFFFFF;
+        prevMenuCurSelected = curSelected;
+        curSelected = 0;
+        updateTexts();
+        updateSelected();
+    }
+    else if (layer == "animations"){
+        switch (curSelected){
+            case 0:
+                changeLayer(6,"opening");
+            case 1:
+                changeLayer(7,"badending");
+        }
+        bg.color = 0xFFFFFF;
+        prevMenuCurSelected = curSelected;
+        curSelected = 0;
+        updateTexts();
+        updateSelected();
+    }
+    else {
+        openLink();
+    }
+}
+
+function openLink(){
+    if (curArray[curSelected].link != null){
+        CoolUtil.browserLoad(curArray[curSelected].link);
+    }
+}
+
+function updateSelected(){
+
+    if (infoTween != null){
+        infoTween.cancel();
+    }
+
+    infoText.alpha = 0;
+    infoText.text = curArray[curSelected].info;
+    infoTween = FlxTween.tween(infoText,  {alpha: 0.5}, 1.0, {ease: FlxEase.sineOut});
+
+    for (i in 0...curArrayText.length) {
+        if (i == curSelected){
+            curArrayText.members[i].alpha = 1;
+            curArrayText.members[i].scale.set(1.3,1.3);
+            curArrayText.members[i].x = 200;
+        }
+        else if ((i-1) == curSelected||(i+1) == curSelected){
+            curArrayText.members[i].alpha = 0.15;
+            curArrayText.members[i].scale.set(1.0,1.0);
+            curArrayText.members[i].x = 0;
+        } else {
+            curArrayText.members[i].alpha = 0.1;
+            curArrayText.members[i].scale.set(0.95,0.95);
+            curArrayText.members[i].x = -50;
+        }
+    }
+}
+
+function changeLayer(whichArray:Int, whichLayer:String){
+    curArray = allArrays[whichArray];
+
+    if (infoTween != null){
+        infoTween.cancel();
+    }
+
+    layer = whichLayer;
+}
+
+function addCreditsToArray(){
+    var sectionCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "CORRUPTION", info: "\nSelect to see credits.", link: null},
+        { name: "ANIMATIONS", info: "\nSelect to see credits.", link: null},
+        { name: "GENERAL", info: "\nSelect to see credits.", link: null},
+        { name: "CORRUPTION: IF", info: "\nSelect to see credits.", link: null},
+        { name: "MEMORY", info: "\nIn loving memory\nof those who we lost.", link: null},
+        { name: "EXTRA", info: "\nSelect to see more.", link: null}
+    ];
+
+    var corruptionCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "NULL AND VOID", info: "\nSelect to see credits.", link: null},
+        { name: "CHKDSK", info: "\nSelect to see credits.", link: null},
+        { name: "BLOODLUST", info: "\nSelect to see credits.", link: null},
+        { name: "ACCESS DENIED", info: "\nSelect to see credits.", link: null}
+    ];
+
+    var animationCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "OPENING", info: "\nSelect to see credits.", link: null},
+        { name: "BAD ENDING", info: "\nSelect to see credits.", link: null}
+    ];
+
+    var nullAndVoidCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "NULL AND VOID", info: "\nSong: fluffyFHX", link: "https://www.youtube.com/channel/UC45OK9Bcx9R7uJ1tPMJaTkg"},
+        { name: "PHANTOMFEAR", info: "Director\nArt\nCode\nCutscenes\nCharting", link: "https://www.youtube.com/@PhantomFearYT"},
+        { name: "FUSA", info: "\nPixel BF front view sprite.", link: "https://x.com/fusanensan_fnf"},
+        { name: "NEBULA THE ZORUA", info: "\nCode\nMod chart", link: "https://bsky.app/profile/nebulazorua.bsky.social"},
+        { name: "DUSKIEWHY", info: "\nOG Mod chart", link: "https://www.youtube.com/@DuskieWhy"},
+        { name: "PINCERPROD", info: "\nCutscene BG wall details", link: "https://www.youtube.com/@PincerProd"},
+        { name: "LEEBERT", info: "\nCutscene Song", link: "https://www.youtube.com/@leebert"},
+        { name: "NOTSPRING", info: "\nCharting", link: "https://www.youtube.com/@NotSpring"},
+        { name: "TSUKIMI MIKAZUKI", info: "\nHarvester VA", link: "https://www.youtube.com/@TsukimiDe1pai"},
+        { name: "KOSPI", info: "\nCutscene Skybox", link: "https://x.com/@frixen__"}
+    ];
+
+    var chkdskCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "CHKDSK", info: "\nSong:\nKazuya,\nLiterallyNoOne", link: "https://youtu.be/BjOvA9us7bE?si=qG5d6D1rcqn7zArB"},
+        { name: "PHANTOMFEAR", info: "Director\nArt\nCode\nCutscenes", link: "https://www.youtube.com/@PhantomFearYT"},
+        { name: "FUSA", info: "\nPixel BF front view sprite.", link: "https://x.com/fusanensan_fnf"},
+        { name: "NEBULA THE ZORUA", info: "\nMod chart", link: "https://bsky.app/profile/nebulazorua.bsky.social"},
+        { name: "DUSKIEWHY", info: "\nMod chart", link: "https://www.youtube.com/@DuskieWhy"},
+        { name: "KAZUYA", info: "\nMusician", link: "https://www.youtube.com/@raytraxdtm"},
+        { name: "LITERALLYNOONE", info: "\nMusician", link: "https://www.youtube.com/@LiterallyNoOne"},
+        { name: "LEEBERT", info: "\nCutscene Song", link: "https://www.youtube.com/@leebert"},
+        { name: "FLOOTENA", info: "\nCharting", link: "https://x.com/FlootenaDX"},
+        { name: "KOSPI", info: "\nCutscene Skybox", link: "https://x.com/@frixen__"}
+    ];
+
+    var bloodlustCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "BLOODLUST", info: "\nSong: Leebert", link: "https://www.youtube.com/@leebert"},
+        { name: "PHANTOMFEAR", info: "Director\nArt\nCode\nCutscenes", link: "https://www.youtube.com/@PhantomFearYT"},
+        { name: "BEEFSTARCHJELLO", info: "\nCutscenes\nSpider Mommy Mearest Sprite\nSprite animations", link: "https://x.com/beefstarchjello"},
+        { name: "AKNIYET", info: "\nSprite Line Art\nGF + MM Sprite coloring", link: "https://x.com/akniyet_z"},
+        { name: "NOVASAUR", info: "\nGF Pose Concepts Art", link: "https://www.youtube.com/@NNovasaur"},
+        { name: "YUKIZAKURA", info: "\nForest Background", link: "https://x.com/yukizakura1126"},
+        { name: "NEBULA THE ZORUA", info: "\nCode", link: "https://bsky.app/profile/nebulazorua.bsky.social"},
+        { name: "FLOOTENA", info: "\nCharting", link: "https://x.com/FlootenaDX"},
+        { name: "PINCERPROD", info: "\nGF VA", link: "https://www.youtube.com/@PincerProd"},
+        { name: "KOSPI", info: "\nCutscene Skybox", link: "https://x.com/@frixen__"}
+    ];
+
+    var accessDeniedCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "ACCESS DENIED", info: "\nSong: GRYSCL", link: "https://youtu.be/HRg91nxRyo0?si=8M3NUniXalOiWTur"},
+        { name: "PHANTOMFEAR", info: "Director\nArt\nCode\nCutscenes", link: "https://www.youtube.com/@PhantomFearYT"},
+        { name: "NEBULA THE ZORUA", info: "\nModChart\nCode", link: "https://bsky.app/profile/nebulazorua.bsky.social"},
+        { name: "DUSKIEWHY", info: "\nBase modchart", link: "https://www.youtube.com/@DuskieWhy"},
+        { name: "FLOOTENA", info: "\nCharting", link: "https://x.com/FlootenaDX"}
+    ];
+
+    var openingCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "CORRUPTION OPENING", info: "by: Funnyleech,\nDani Susatyo,\nZhafiraWildhania,\nWillyJayasukma,\nLunaticParfait", link: "https://www.youtube.com/watch?v=rwclhBa1Tqo"},
+        { name: "PHANTOMFEAR", info: "\nArt\nAnimation", link: "https://www.youtube.com/@PhantomFearYT"},
+        { name: "YUKIZAKURA", info: "\nArt", link: "https://x.com/yukizakura1126"},
+        { name: "SACUNIULTIMATE", info: "\nArt\nAnimation", link: "https://x.com/sacuniUltimate"},
+        { name: "BLUEGARDEN", info: "\nArt", link: "https://x.com/Oceanlight375"},
+        { name: "DAYANCI", info: "\nArt", link: "https://x.com/dayanci_"},
+        { name: "KOSPI", info: "\nPico Week Background", link: "https://x.com/@frixen__"},
+        { name: "FLOOTENA", info: "\nCharting", link: "https://x.com/FlootenaDX"}
+    ];
+
+    var badendingCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "SHINIGAMI", info: "\nSong:\neverything falls to the floor", link: "https://www.youtube.com/watch?v=FN2hLbcs974"},
+        { name: "BEEFSTARCHJELLO", info: "\nBF Cutscene\nBF VA", link: "https://x.com/beefstarchjello"},
+        { name: "PHANTOMFEAR", info: "\nNull Deletion Cutscene\nCredits Visualizer", link: "https://www.youtube.com/@PhantomFearYT"}
+    ];
+
+    var ifCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "PRETENCE", info: "Song:\nLeebert,\nZeroh\nRazorDaMusician\nAureCraft", link: null},
+        { name: "PINCERPROD", info: "\nDirector\nArt\nConcept Art\nVA", link: "https://www.youtube.com/@PincerProd"},
+        { name: "BEEFSTARCHJELLO", info: "\nArt\nAnimation", link: "https://x.com/beefstarchjello"},
+        { name: "ACECRE4M", info: "\nIcon Art\nBackground Art\nConcept Art", link: "https://bsky.app/profile/acecre4m.bsky.social"},
+        { name: "AURECRAFT", info: "\nConcept Art\nAnimator\nPromo Art\nMusician", link: "http://www.youtube.com/@AureCraft_"},
+        { name: "TOTALLYNBF", info: "\nConcept Art\nPromo Art", link: "https://totallynbf.newgrounds.com/"},
+        { name: "STEAMPANDAA", info: "\nPromo Art\nJolly Mode", link: "https://bsky.app/profile/steampandaa.bsky.social"},
+        { name: "LEEBERT", info: "\nMusician", link: "https://x.com/Bruh_Leebert"},
+        { name: "ZEROH", info: "\nMusician", link: "https://www.youtube.com/channel/UC5Km5yZrSF7t4molQk9MYhg"},
+        { name: "RAZORDAMUSICIAN", info: "\nMusician\nHurt SFX", link: "https://youtube.com/@razordamusician?si=jgtm5_6OiQO1ZzXX"},
+        { name: "ULTRAVIOLET", info: "\nMenu Music", link: "https://www.youtube.com/@UltraaVioletMusic"},
+        { name: "PHANTOMFEAR", info: "\nCode", link: "https://www.youtube.com/@PhantomFearYT"},
+        { name: "DUODOES", info: "\nVA\nChart", link: "https://www.youtube.com/@DuoDoesStuff"}
+    ];
+
+    var generalCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "PHANTOMFEAR", info: "\nMenu Art\nCode", link: "https://www.youtube.com/@PhantomFearYT"},
+        { name: "NEBULA THE ZORUA", info: "\nTroll Engine\nCode\nOptimization", link: "https://bsky.app/profile/nebulazorua.bsky.social"},
+        { name: "BEEFSTARCHJELLO", info: "\nMenu Art", link: "https://x.com/beefstarchjello"},
+        { name: "SACUNIULTIMATE", info: "\nTitle Screen Art", link: "https://x.com/sacuniUltimate"},
+        { name: "FLUFFYFHX", info: "\nBF Death Screen Music", link: "https://www.youtube.com/channel/UC45OK9Bcx9R7uJ1tPMJaTkg"},
+        { name: "LEEBERT", info: "\nGF Death Screen Music", link: "https://x.com/Bruh_Leebert"},
+        { name: "YUKIZAKURA", info: "\nCorruption: Side Story", link: "https://x.com/yukizakura1126"},
+        { name: "SMILEYSQUEAK", info: "\nOriginal Menu Song", link: "https://www.youtube.com/@smileysqueak"},
+        { name: "SAI", info: "\nConverting MP4s to Spritesheets", link: "https://x.com/sacuniUltimate"},
+		{ name: "SWORDCUBE", info: "\nPlaytesting for super low-end\nPixel Miss judgement", link: "https://bsky.app/profile/swordcube.bsky.social"},
+		{ name: "LAVENDER", info: "\nOptimized the videos", link: "https://bsky.app/profile/lavender06.bsky.social"},
+        { name: "FUNKIN' CREW INC.", info: "\nFriday Night Funkin'", link: "https://funkin.me"}
+    ];
+
+    if (buildTarget == 'mac') {
+        // burgerballs to the burgerescue
+        generalCredits.push({ name: "Burgerballs", info: "\nProvided MacOS Compilations", link: "https://bsky.app/profile/burgerballs.bsky.social"});
+    }
+
+    var memoryCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "Rod", info: "\nIn loving memory.\n24/08/03 - 17/07/24", link: "https://x.com/AstactArcade4K"},
+        { name: "Onyx", info: "\nIn loving memory.", link: null}
+    ];
+
+    var extraCredits:Array<{ name:String, info:String, link:String }> = [
+        { name: "MERCH", info: "\ncrowdmade.com", link: "https://crowdmade.com/collections/phantomfear"},
+        { name: "FULL STORY", info: "\nEvery episode in order.", link: "https://youtube.com/playlist?list=PLPtjMqSqi-a0R38VWeZndX26rUu8TK_rc&si=YKyAwbXBs2hA1yla"}
+    ];
+
+    allArrays.push(sectionCredits);
+    allArrays.push(corruptionCredits);
+    allArrays.push(animationCredits);
+    allArrays.push(chkdskCredits);
+    allArrays.push(bloodlustCredits);
+    allArrays.push(accessDeniedCredits);
+    allArrays.push(openingCredits);
+    allArrays.push(badendingCredits);
+    allArrays.push(ifCredits);
+    allArrays.push(generalCredits);
+    allArrays.push(memoryCredits);
+    allArrays.push(extraCredits);
+    allArrays.push(nullAndVoidCredits);
+}

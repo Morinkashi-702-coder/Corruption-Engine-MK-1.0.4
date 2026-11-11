@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="num2.png">
+	<!-- Created with Adobe Animate version 22.0.1.105 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="0second0000" x="8" y="8" width="95" height="185"/>
+	<SubTexture name="1second0000" x="111" y="8" width="31" height="153" frameX="-62" frameY="-14" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="2second0000" x="150" y="8" width="95" height="185"/>
+	<SubTexture name="3second0000" x="253" y="8" width="91" height="185" frameX="-4" frameY="0" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="4second0000" x="352" y="8" width="78" height="153" frameX="-18" frameY="-13" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="5second0000" x="8" y="201" width="89" height="185" frameX="-2" frameY="0" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="6second0000" x="105" y="201" width="93" height="185"/>
+	<SubTexture name="7second0000" x="206" y="201" width="56" height="167" frameX="-35" frameY="-2" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="8second0000" x="270" y="201" width="95" height="185"/>
+	<SubTexture name="9second0000" x="373" y="201" width="78" height="167" frameX="-15" frameY="0" frameWidth="1580" frameHeight="1264"/>
+</TextureAtlas>

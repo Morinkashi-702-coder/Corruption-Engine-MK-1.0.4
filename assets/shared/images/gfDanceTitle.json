@@ -1,0 +1,39 @@
+{
+		"menuBlackX": -320,
+		"menuBlackY": 966,
+		"menuBlackScale": 0.77,
+
+	"menuWaterX": -240,
+	"menuWaterY": -225,
+	"menuWaterScale": 0.75,
+
+	"menuBlackAlpha": 0.04,
+	"menuWaterAlpha": 0.04,
+
+	"gfx": -1182,
+	"gfy": -1353,
+	"gfxScale": 0.21,
+	"gfxAlpha": 0.04,
+
+	"titlex": -299,
+	"titley": -133,
+	"titleScale": 0.3,
+	"titleAlpha": 0.04,
+
+	"startx": 307,
+	"starty": 403,
+	"startScale": 0.48,
+
+		"waterx": 907,
+		"waterWorldX": 0,
+		"waterWorldY": 594,
+		"waterBitmapX": 0,
+		"waterBitmapY": -2953,
+		"waterContainerX": 0,
+		"waterContainerY": 594,
+		"waterScale": 1,
+		"waterAlpha": 5,
+
+	"bpm": 102,
+	"animation": "gfDance"
+}

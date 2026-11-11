@@ -1,0 +1,152 @@
+if(FlxG.keys.pressed.SHIFT || PlayState.chartingMode){ // Shift + Pause, or if pausing in chart editor, we should use regular pause substate (for accessing skip time etc)
+	return;
+}
+
+var disabledResume = false;
+var object:FlxSprite;
+
+var bg:FlxSprite;
+var chains:FlxSprite;
+
+var optionText:FlxSpriteGroup;
+var selectedText:FlxSpriteGroup;
+
+var prevSel:Int = -1;
+
+function create(){
+
+    statecreate();
+
+    this.menuItems.remove("Skip Time");
+    this.menuItems.remove("Toggle Botplay");
+    this.menuItems.remove("Change Modifiers");
+
+    // for (id in 0...this.allTexts.length)
+    // {
+    //     var daText = this.allTexts[id];
+
+    //     daText.x =-2000;
+    //     daText.alpha = 0;
+    // }
+
+    this.regenMenu();
+
+    this.remove(this.grpMenuShit);
+
+    // for (item in this.grpMenuShit.members)
+    // {
+    //     item.x = -3000;
+    //     item.alpha = 0;
+    // }
+
+    bg = new FlxSprite(-40,10, Paths.image('menus/pause/bg'));
+    bg.scrollFactor.set(0,0);
+    bg.scale.set(1,1.1);
+    add(bg);
+
+    chains = new FlxSprite();
+    chains.frames = Paths.getSparrowAtlas('menus/pause/pause chains');
+    chains.animation.addByPrefix("idle", 'chains', 24, false);
+    chains.animation.play("idle", true);
+    chains.scrollFactor.set(0,0);
+    chains.scale.set(1,1);
+    chains.antialiasing = true;
+    chains.setPosition(-990,-620);
+    add(chains);
+
+    optionText = new FlxSpriteGroup();
+    add(optionText);
+
+    selectedText = new FlxSpriteGroup();
+    add(selectedText);
+
+    for (i in 0...5) {
+        var textOpt = new FlxSprite(0,0);
+		textOpt.frames = Paths.getSparrowAtlas("menus/pause/pauseButtons");
+		textOpt.animation.addByPrefix("idle", i, 0, true);
+		textOpt.animation.play("idle", true);
+        textOpt.scrollFactor.set(0,0);
+        textOpt.scale.set(1,1);
+        textOpt.alpha = 1;
+        optionText.add(textOpt);
+
+        var textSel = new FlxSprite(0,0);
+		textSel.frames = Paths.getSparrowAtlas("menus/pause/pauseButtons");
+		textSel.animation.addByPrefix("idle", "p" + i, 0, true);
+		textSel.animation.play("idle", true);
+        textSel.scrollFactor.set(0,0);
+        textSel.scale.set(1,1);
+        textSel.alpha = 1;
+        selectedText.add(textSel);
+    }
+
+    FlxG.sound.play(Paths.sound('pause'));
+
+    optionText.setPosition(39,37);
+    selectedText.setPosition(39,37);
+
+    optionText.scale.set(0.9,0.9);
+    selectedText.scale.set(0.9,0.9);
+
+    object = bg;
+}
+
+function changeSelection(change:Int = 0){
+    trace("changeSelection");
+    statechangeSelection();
+}
+
+function updateOption():Void
+{
+    for (i in 0...5) {
+        if (i == this.curSelected){
+            optionText.members[i].alpha = 0;
+            selectedText.members[i].alpha = 1;
+
+            selectedText.members[i].scale.set(0.9,0.9);
+        } else{
+            optionText.members[i].alpha = 0.2;
+            selectedText.members[i].alpha = 0;
+
+            optionText.members[i].scale.set(0.85,0.85);
+        }
+    }
+}    
+
+
+
+function updateSkipTextStuff(){
+    //
+}
+
+function updateSkipTimeText()
+{
+    //
+}
+
+function update(elapsed:Float){
+    stateupdate(elapsed);
+
+
+	// Some options remove the ability to resume
+	// This makes sure it works in the custom substate
+	if(!disabledResume && !this.menuItems.contains("Resume")){
+		disabledResume = true;
+
+		trace("no more resume");
+		for (i in 0...5) {
+			if (i == 0){
+				trace("resume go away");
+				optionText.remove(optionText.members[i], true);
+				selectedText.remove(selectedText.members[i], true);
+				
+			}
+		}
+	}
+
+    if (prevSel != this.curSelected){
+        prevSel = this.curSelected;
+        updateOption(this.curSelected);
+    }
+    
+}

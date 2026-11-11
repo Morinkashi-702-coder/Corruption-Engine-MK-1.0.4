@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="floatingBf.png">
+	<!-- Created with Adobe Animate version 22.0.1.105 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="BfFloat0000" x="8" y="8" width="729" height="656" frameX="-25" frameY="0" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0001" x="8" y="8" width="729" height="656" frameX="-25" frameY="0" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0002" x="8" y="8" width="729" height="656" frameX="-25" frameY="0" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0003" x="8" y="8" width="729" height="656" frameX="-25" frameY="0" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0004" x="8" y="8" width="729" height="656" frameX="-25" frameY="0" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0005" x="8" y="8" width="729" height="656" frameX="-25" frameY="0" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0006" x="8" y="8" width="729" height="656" frameX="-25" frameY="0" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0007" x="745" y="8" width="734" height="633" frameX="0" frameY="-23" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0008" x="745" y="8" width="734" height="633" frameX="0" frameY="-23" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0009" x="745" y="8" width="734" height="633" frameX="0" frameY="-23" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0010" x="745" y="8" width="734" height="633" frameX="0" frameY="-23" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0011" x="745" y="8" width="734" height="633" frameX="0" frameY="-23" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0012" x="745" y="8" width="734" height="633" frameX="0" frameY="-23" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0013" x="745" y="8" width="734" height="633" frameX="0" frameY="-23" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0014" x="1487" y="8" width="678" height="615" frameX="-8" frameY="-41" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0015" x="1487" y="8" width="678" height="615" frameX="-8" frameY="-41" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0016" x="1487" y="8" width="678" height="615" frameX="-8" frameY="-41" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0017" x="1487" y="8" width="678" height="615" frameX="-8" frameY="-41" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0018" x="1487" y="8" width="678" height="615" frameX="-8" frameY="-41" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0019" x="1487" y="8" width="678" height="615" frameX="-8" frameY="-41" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0020" x="1487" y="8" width="678" height="615" frameX="-8" frameY="-41" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0021" x="2173" y="8" width="633" height="611" frameX="-33" frameY="-45" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0022" x="2173" y="8" width="633" height="611" frameX="-33" frameY="-45" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0023" x="2173" y="8" width="633" height="611" frameX="-33" frameY="-45" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0024" x="2173" y="8" width="633" height="611" frameX="-33" frameY="-45" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0025" x="2173" y="8" width="633" height="611" frameX="-33" frameY="-45" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0026" x="2173" y="8" width="633" height="611" frameX="-33" frameY="-45" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0027" x="2173" y="8" width="633" height="611" frameX="-33" frameY="-45" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0028" x="2814" y="8" width="662" height="622" frameX="-28" frameY="-34" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0029" x="2814" y="8" width="662" height="622" frameX="-28" frameY="-34" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0030" x="2814" y="8" width="662" height="622" frameX="-28" frameY="-34" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0031" x="2814" y="8" width="662" height="622" frameX="-28" frameY="-34" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0032" x="2814" y="8" width="662" height="622" frameX="-28" frameY="-34" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0033" x="2814" y="8" width="662" height="622" frameX="-28" frameY="-34" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0034" x="2814" y="8" width="662" height="622" frameX="-28" frameY="-34" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0035" x="8" y="672" width="686" height="632" frameX="-25" frameY="-24" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0036" x="8" y="672" width="686" height="632" frameX="-25" frameY="-24" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0037" x="8" y="672" width="686" height="632" frameX="-25" frameY="-24" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0038" x="8" y="672" width="686" height="632" frameX="-25" frameY="-24" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0039" x="8" y="672" width="686" height="632" frameX="-25" frameY="-24" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0040" x="8" y="672" width="686" height="632" frameX="-25" frameY="-24" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0041" x="8" y="672" width="686" height="632" frameX="-25" frameY="-24" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0042" x="702" y="672" width="716" height="617" frameX="-38" frameY="-39" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0043" x="702" y="672" width="716" height="617" frameX="-38" frameY="-39" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0044" x="702" y="672" width="716" height="617" frameX="-38" frameY="-39" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0045" x="702" y="672" width="716" height="617" frameX="-38" frameY="-39" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0046" x="702" y="672" width="716" height="617" frameX="-38" frameY="-39" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0047" x="702" y="672" width="716" height="617" frameX="-38" frameY="-39" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0048" x="702" y="672" width="716" height="617" frameX="-38" frameY="-39" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0049" x="1426" y="672" width="757" height="629" frameX="-38" frameY="-27" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0050" x="1426" y="672" width="757" height="629" frameX="-38" frameY="-27" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0051" x="1426" y="672" width="757" height="629" frameX="-38" frameY="-27" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0052" x="1426" y="672" width="757" height="629" frameX="-38" frameY="-27" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0053" x="1426" y="672" width="757" height="629" frameX="-38" frameY="-27" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0054" x="1426" y="672" width="757" height="629" frameX="-38" frameY="-27" frameWidth="795" frameHeight="656"/>
+	<SubTexture name="BfFloat0055" x="1426" y="672" width="757" height="629" frameX="-38" frameY="-27" frameWidth="795" frameHeight="656"/>
+</TextureAtlas>

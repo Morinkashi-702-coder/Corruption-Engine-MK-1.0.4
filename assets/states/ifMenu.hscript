@@ -1,0 +1,236 @@
+
+var canSelect:Bool = true;
+var object:FlxSprite;
+var moveTween:FlxTween;
+var cloud:FlxSprite;
+var disk:FlxSprite;
+var titleBlack:FlxSprite;
+var musicPlayer:FlxSound;
+var transition:FlxSprite;
+
+function onStateCreate(){
+    persistentUpdate = true;
+	persistentDraw = true;
+
+    MusicBeatState.stopMenuMusic();
+
+    FadeTransitionSubstate.nextCamera = FlxG.camera; // AAAA
+    
+    Paths.pushGlobalContent();
+    Paths.loadTheFirstEnabledMod();
+    FlxG.mouse.visible = false;
+    FlxG.camera.bgColor = FlxColor.BLACK;
+
+    camFollow = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
+    camFollow.alpha = 0;
+    camFollow.setPosition(951,570);
+    //FlxTween.tween(camFollowPos,  {x: camFollowPos.x + 1000}, 1.0, {ease: FlxEase.sineInOut, type: FlxTween.PINGPONG});
+    camFollowPos = new FlxObject(951,-270, 1, 1);
+    add(camFollow);
+    add(camFollowPos);
+
+    FlxG.camera.zoom = 0.593;
+    FlxG.camera.follow(camFollowPos, null, 1);
+
+    var bg = new FlxSprite(0,0, Paths.image('menus/if/bgBase'));
+    bg.scrollFactor.set(0,0);
+    bg.scale.set(1.7,1.7);
+    add(bg);
+
+    cloud = new FlxSprite(-2330,0, Paths.image('menus/if/cloudScroll'));
+    cloud.scrollFactor.set(0,0);
+    cloud.scale.set(1.7,1.7);
+    add(cloud); //start pos: -2330| middle pos: -880 |end pos: 610
+    cloud.alpha = 0;
+    cloud.blend = 11;
+    moveTween = FlxTween.tween(cloud, {x: -880, alpha: 0.6}, 10, {onComplete: cloudEase1});
+
+    disk = new FlxSprite(379,267, Paths.image('menus/if/spinnyDisk'));
+    disk.scrollFactor.set(0,0);
+    disk.scale.set(1.7,1.7);
+    add(disk);
+    disk.alpha = 0;
+    FlxTween.tween(disk, {alpha: 0.8}, 10);
+
+    var falsethorn = new FlxSprite(700,0, Paths.image('menus/if/falsethorn'));
+    falsethorn.scrollFactor.set(0,0);
+    falsethorn.scale.set(1.7,1.7);
+    add(falsethorn);
+    falsethorn.alpha = 0;
+    FlxTween.tween(falsethorn, {alpha: 1, x: 0}, 2, {ease: FlxEase.circOut});
+
+    var bf = new FlxSprite(-700,0, Paths.image('menus/if/bf'));
+    bf.scrollFactor.set(0,0);
+    bf.scale.set(1.7,1.7);
+    add(bf);
+    bf.alpha = 0;
+    FlxTween.tween(bf, {alpha: 1, x: 0}, 2, {ease: FlxEase.circOut});
+
+    var bars = new FlxSprite(0,0, Paths.image('menus/if/bars'));
+    bars.scrollFactor.set(0,0);
+    bars.scale.set(1.7,1.7);
+    add(bars);
+
+    var logo = new FlxSprite(0,0, Paths.image('menus/if/logo'));
+    logo.scrollFactor.set(0,0);
+    logo.scale.set(1.7,1.7);
+    add(logo);
+    logo.alpha = 0;
+    logo.antialiasing = true;
+    FlxTween.tween(logo, {alpha: 1, x: 0}, 3, {ease: FlxEase.circIn});
+
+    var songName = new FlxSprite(0,0, Paths.image('menus/if/songName'));
+    songName.scrollFactor.set(0,0);
+    songName.scale.set(1.7,1.7);
+    add(songName);
+    songName.alpha = 0;
+    FlxTween.tween(songName, {alpha: 1, x: 0}, 4, {ease: FlxEase.circIn});
+
+    //musicPlayer = new FlxSound().loadEmbedded(Paths.music('menu6'),true);
+    //musicPlayer.play();
+
+    FlxG.sound.playMusic(Paths.music('menu6'), 1);
+
+    transition = new FlxSprite();
+    transition.frames = Paths.getSparrowAtlas('burnTransition');
+    transition.animation.addByPrefix("idle", 'burnTransition idle', 24, false);
+    transition.animation.play("idle", true);
+    transition.scrollFactor.set(0,0);
+    transition.scale.set(2.5,2.5);
+    transition.antialiasing = true;
+    transition.alpha = 0;
+    transition.blend = 9;
+    add(transition);
+	transition.setPosition(150,119);
+
+    titleBlack = new FlxSprite(0,0, Paths.image('menus/mainmenu/fullBlack'));
+    titleBlack.scrollFactor.set(0,0);
+    titleBlack.scale.set(1.7,1.7);
+    titleBlack.alpha = 0;
+    add(titleBlack);
+
+    object = titleBlack;
+
+}
+
+function destroyVid(video){
+	return ()->{
+		trace("dead");
+		remove(video);
+		video.destroy();
+	}
+}
+
+function onUpdate(elapsed){
+    inputShit();
+
+    disk.angle += 100 * elapsed;
+}
+
+function cloudEase1(tween:FlxTween)
+{
+    if (moveTween != null){
+        moveTween.cancel();
+    }
+
+    moveTween = FlxTween.tween(cloud, {x: 610, alpha: 0}, 10, {onComplete: cloudEase2});
+}
+
+function cloudEase2(tween:FlxTween)
+{
+    if (moveTween != null){
+        moveTween.cancel();
+    }
+
+    cloud.x = -2330;
+    moveTween = FlxTween.tween(cloud, {x: -880, alpha: 0.6}, 10, {onComplete: cloudEase1});
+}
+
+
+function inputShit(){
+    if (!canSelect){return;}
+
+    
+    if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER|| FlxG.keys.justPressed.Z){
+        canSelect = false;
+        FlxG.sound.play(Paths.sound('confirmMenu'));
+        startStoryMode();
+    }
+
+    if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A || FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D ){
+        FlxG.sound.play(Paths.sound('scrollMenu'));
+    }
+
+    if (FlxG.keys.justPressed.ESCAPE){
+        canSelect = false;
+        FlxG.sound.play(Paths.sound('confirmMenu'));
+        leaveScene();
+    }
+}
+
+function startStoryMode(){
+    FlxTween.tween(FlxG.camera, {zoom: 0.8}, 1.2, {ease: FlxEase.backIn, onComplete: storyTweenZoom});
+
+    FlxG.sound.play(Paths.sound('water rush'));
+
+    new FlxTimer().start(0.75, function(tmr){
+        transition.alpha = 1;
+        transition.animation.play("idle", true);
+        //transition.play();
+        tmr.destroy();
+    });
+
+    new FlxTimer().start(1.7, function(tmr){
+        titleBlack.alpha = 1;
+        tmr.destroy();
+    });
+    
+}
+
+function storyTweenZoom(tween:FlxTween)
+{
+    //FlxTween.tween(musicPlayer, {volume: 0}, 1.5);
+    if(FlxG.sound.music != null)
+        FlxG.sound.music.fadeOut(1.5, 0);
+    FlxTween.tween(FlxG.camera, {zoom: 6}, 1.5);
+
+	PlayState.difficulty = 1;
+	PlayState.difficultyName = '';
+	PlayState.campaignScore = 0;
+	PlayState.campaignMisses = 0;
+
+	PlayState.isStoryMode = true;
+	PlayState.storyPlaylist = ['pretence'];
+
+    new FlxTimer().start(1.5, function(tmr){
+        // Load the song using proper Psych Engine API
+        // Song is located in: mods/extras corruption/songs/pretence/
+        // Available charts: pretence-canon, pretence-safe
+        // Set the current mod directory first
+        #if MODS_ALLOWED
+        Mods.currentModDirectory = 'extras corruption';
+        #end
+        
+        // Try to load the canon version, fallback to safe
+        var songLoaded = Song.loadFromJson('pretence-canon', 'pretence');
+        if(songLoaded == null) {
+            trace('[ifMenu] WARNING: Could not load pretence-canon, trying pretence-safe');
+            songLoaded = Song.loadFromJson('pretence-safe', 'pretence');
+        }
+        
+        if(songLoaded != null) {
+            var playState = new PlayState();
+            MusicBeatState.switchState(playState);
+        } else {
+            trace('[ifMenu] ERROR: Could not load any version of pretence song');
+        }
+    });
+    
+}
+
+function leaveScene(){
+    //musicPlayer.volume = 0;
+    var state = new HScriptState("softCodeMenu");
+    MusicBeatState.switchState(state);
+}
+

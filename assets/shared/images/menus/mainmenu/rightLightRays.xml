@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="rightLightRays.png">
+	<!-- Created with Adobe Animate version 22.0.1.105 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="right20000" x="8" y="8" width="1574" height="1205" frameX="0" frameY="-59" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20001" x="1590" y="8" width="1573" height="1203" frameX="-1" frameY="-61" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20002" x="3171" y="8" width="1573" height="1209" frameX="-2" frameY="-55" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20003" x="4752" y="8" width="1573" height="1215" frameX="-3" frameY="-49" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20004" x="6333" y="8" width="1571" height="1222" frameX="-5" frameY="-42" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20005" x="8" y="1238" width="1571" height="1228" frameX="-6" frameY="-36" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20006" x="1587" y="1238" width="1570" height="1235" frameX="-8" frameY="-29" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20007" x="3165" y="1238" width="1569" height="1242" frameX="-9" frameY="-22" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20008" x="4742" y="1238" width="1568" height="1249" frameX="-11" frameY="-15" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20009" x="6318" y="1238" width="1568" height="1257" frameX="-12" frameY="-7" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20010" x="8" y="2503" width="1566" height="1264" frameX="-14" frameY="0" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20011" x="1582" y="2503" width="1567" height="1261" frameX="-13" frameY="-3" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20012" x="3157" y="2503" width="1568" height="1257" frameX="-12" frameY="-7" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20013" x="4733" y="2503" width="1568" height="1252" frameX="-11" frameY="-12" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20014" x="6309" y="2503" width="1569" height="1246" frameX="-10" frameY="-18" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20015" x="8" y="3775" width="1569" height="1239" frameX="-9" frameY="-25" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20016" x="1585" y="3775" width="1570" height="1233" frameX="-7" frameY="-31" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20017" x="3163" y="3775" width="1571" height="1225" frameX="-5" frameY="-39" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20018" x="4742" y="3775" width="1572" height="1216" frameX="-4" frameY="-48" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20019" x="6322" y="3775" width="1573" height="1207" frameX="-2" frameY="-57" frameWidth="1580" frameHeight="1264"/>
+	<SubTexture name="right20020" x="8" y="8" width="1574" height="1205" frameX="0" frameY="-59" frameWidth="1580" frameHeight="1264"/>
+</TextureAtlas>
