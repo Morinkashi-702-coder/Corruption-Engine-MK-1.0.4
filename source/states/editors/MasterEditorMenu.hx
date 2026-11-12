@@ -41,7 +41,7 @@ class MasterEditorMenu extends MusicBeatState
 		add(bg);
 
 		// BF character image on the left that slides in to the right
-		var bfImg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menus/freeplay/old/BF-CharacterEdi'));
+		var bfImg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menus/mainmenu/old/BF-CharacterEdi'));
 		bfImg.antialiasing = ClientPrefs.data.antialiasing;
 		bfImg.updateHitbox();
 		bfImg.scrollFactor.set();
@@ -53,7 +53,7 @@ class MasterEditorMenu extends MusicBeatState
 		FlxTween.tween(bfImg, { x: 0 }, 0.7, { ease: FlxEase.quadOut, startDelay: 0.1 });
 
 		// Usar Overlay de freeplayC (assets/shared/images/freeplayC/Overlay.png)
-		overlay = new FlxSprite().loadGraphic(Paths.image('menus/freeplay/old/Overlay'));
+		overlay = new FlxSprite().loadGraphic(Paths.image('menus/mainmenu/old/Overlay'));
 		overlay.antialiasing = ClientPrefs.data.antialiasing;
 		overlay.scrollFactor.set();
 		overlay.x = 0;

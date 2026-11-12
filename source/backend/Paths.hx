@@ -383,6 +383,8 @@ class Paths
 			#if sys
 			if (FileSystem.exists(file))
 				bitmap = BitmapData.fromFile(file);
+			else if (parentFolder == 'embed' && OpenFlAssets.exists(file, IMAGE))
+				bitmap = OpenFlAssets.getBitmapData(file, false);
 			#else
 			if (OpenFlAssets.exists(file, IMAGE))
 				bitmap = OpenFlAssets.getBitmapData(file);
